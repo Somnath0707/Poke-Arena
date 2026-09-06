@@ -1,0 +1,8 @@
+### Create a Valid Trainer
+POST http://localhost:8088/api/trainers
+Content-Type: application/json
+
+{
+  "name": "Ash Ketchum",
+  "email": "ash@pallet.town"
+}
