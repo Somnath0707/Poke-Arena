@@ -190,15 +190,5 @@ curl -X POST http://localhost:8088/api/battles/simulate \
 
 ---
 
-## 🗺️ What's Cooking (Roadmap)
-
-- [ ] **Move System**: Assigning 4 distinct moves (Power, Accuracy, Type, PP) like *Thunderbolt*, *Flamethrower*, and *Hydro Pump*.
-- [ ] **PostgreSQL + Flyway**: Production persistence so records survive server restarts.
-- [ ] **Swagger / OpenAPI**: Live interactive docs at `/swagger-ui.html`.
-- [ ] **WebSockets (STOMP)**: Live interactive mode where two players choose moves turn-by-turn in real time.
-- [ ] **Docker & Compose**: One-command `docker compose up` deployment.
-
----
-
 ## 📄 License
 This project is open-source and available under the [MIT License](LICENSE). Pokémon and Pokémon character names are trademarks of Nintendo / Creatures Inc. / GAME FREAK inc.
