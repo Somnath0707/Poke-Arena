@@ -6,6 +6,8 @@ import com.pokearena.model.dto.TrainerResponseDto;
 import com.pokearena.repository.TrainerRepository;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 public class TrainerService {
     TrainerRepository trainerRepository ;
@@ -29,6 +31,12 @@ public class TrainerService {
                 trainer.getWins(),
                 trainer.getLosses()
         );
+    }
+
+    public List<TrainerResponseDto> getLeaderBoard(){
+        return trainerRepository.findTop10ByOrderByWinsDesc().stream()
+                .map(t -> new TrainerResponseDto(t.getId() , t.getName(),t.getEmail() , t.getWins(),t.getLosses()))
+                .toList();
     }
 
 }

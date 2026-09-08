@@ -31,6 +31,7 @@
 		<kotlin.version>2.2.20</kotlin.version>
 	</properties>
 	<dependencies>
+
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-h2console</artifactId>

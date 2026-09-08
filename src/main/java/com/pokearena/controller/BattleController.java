@@ -2,10 +2,13 @@ package com.pokearena.controller;
 
 import com.pokearena.model.dto.BattleResultResponseDto;
 import com.pokearena.model.dto.BattleSimulationRequest;
+import com.pokearena.repository.BattleHistoryRepository;
 import com.pokearena.service.BattleService;
 import jakarta.validation.Valid;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/battles")
@@ -25,5 +28,12 @@ public class BattleController {
                 battleService.simulateBattle(request);
 
         return ResponseEntity.ok(response);
+    }
+
+
+    @GetMapping("/history/{trainerName}")
+    public ResponseEntity<List<BattleResultResponseDto>> getBattleHistory(@PathVariable String trainerName){
+        List<BattleResultResponseDto> history = battleService.getHistoryForTrainer(trainerName);
+        return ResponseEntity.ok(history);
     }
 }

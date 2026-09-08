@@ -16,5 +16,8 @@ public enum PokemonType {
     Rock,
     Dragon,
     Fairy,
-    Steel
+    Steel,
+    Normal,
+    Ghost,
+    Dark
 }

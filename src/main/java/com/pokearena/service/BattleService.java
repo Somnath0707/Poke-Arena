@@ -5,6 +5,8 @@ import com.pokearena.engine.BattlePokemon;
 import com.pokearena.engine.BattleResult;
 import com.pokearena.entity.BattleHistory;
 import com.pokearena.entity.Team;
+import com.pokearena.exception.InvalidBattleException;
+import com.pokearena.exception.ResourceNotFoundException;
 import com.pokearena.model.dto.BattleResultResponseDto;
 import com.pokearena.model.dto.BattleSimulationRequest;
 import com.pokearena.repository.BattleHistoryRepository;
@@ -33,11 +35,11 @@ public class BattleService {
     @Transactional
     public BattleResultResponseDto simulateBattle(BattleSimulationRequest request){
 
-        Team teamA = teamRepository.findById(request.teamAId()).orElseThrow(() -> new RuntimeException("Team A not found"));
-        Team teamB = teamRepository.findById(request.teamBId()).orElseThrow(() -> new RuntimeException("Team B not found"));
+        Team teamA = teamRepository.findById(request.teamAId()).orElseThrow(() -> new ResourceNotFoundException("Team A not found"));
+        Team teamB = teamRepository.findById(request.teamBId()).orElseThrow(() -> new ResourceNotFoundException("Team B not found"));
 
         if(teamA.getId().equals(teamB.getId())){
-            throw new RuntimeException("Cannot battle the same team");
+            throw new InvalidBattleException("Cannot battle the same team");
         }
 
         BattleResult result = battleEngine.simulate(
@@ -89,6 +91,20 @@ public class BattleService {
                         m.getCurrLevel() // or getCurrentLevel()
                 ))
                 .toList();
+    }
+
+    public List<BattleResultResponseDto> getHistoryForTrainer(String trainerName) {
+        return battleHistoryRepository.findByTrainerANameOrTrainerBNameOrderByPlayedAtDesc(trainerName, trainerName)
+                .stream()
+                .map(h -> new BattleResultResponseDto(
+                        h.getWinnerName(),
+                        // loser is whichever trainer didn't win:
+                        h.getWinnerName().equals(h.getTrainerAName()) ? h.getTrainerBName() : h.getTrainerAName(),
+                        h.getRoundPlayed(),
+                        h.getBattleLog()
+                ))
+                .toList();
+
     }
 
 }

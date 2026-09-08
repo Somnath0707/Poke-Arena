@@ -4,6 +4,7 @@ import com.pokearena.entity.PokemonSpecies;
 import com.pokearena.entity.Team;
 import com.pokearena.entity.TeamMember;
 import com.pokearena.entity.Trainer;
+import com.pokearena.exception.ResourceNotFoundException;
 import com.pokearena.model.dto.CreateTeamMemberRequest;
 import com.pokearena.model.dto.CreateTeamRequest;
 import com.pokearena.model.dto.TeamMemberResponseDto;
@@ -30,7 +31,7 @@ public class TeamService {
 
     public TeamResponseDto createTeam(CreateTeamRequest request) {
         Trainer trainer = trainerRepository.findById(request.trainerId()).
-                orElseThrow(() -> new RuntimeException("Trainer not found with id: " + request.trainerId()));
+                orElseThrow(() -> new ResourceNotFoundException("Trainer not found with id: " + request.trainerId()));
 
         Team team = new Team();
         team.setTrainer(trainer);
@@ -38,7 +39,7 @@ public class TeamService {
 
         for(CreateTeamMemberRequest memberReq : request.members()){
             PokemonSpecies species = pokemonSpeciesRepository.findById(memberReq.speciesId()).
-                    orElseThrow(()-> new RuntimeException("Pokemon species not found with id: " + memberReq.speciesId()));
+                    orElseThrow(()-> new ResourceNotFoundException("Pokemon species not found with id: " + memberReq.speciesId()));
 
 
             TeamMember member = new TeamMember();
