@@ -104,7 +104,7 @@ public class DataSeeder implements CommandLineRunner {
 
             // 7. Bulk save all 1,215 records in a single database transaction
             pokemonSpeciesRepository.saveAll(speciesList);
-            System.out.println("✅ Successfully seeded " + speciesList.size() + " Pokémon from CSV into H2!");
+            System.out.println("✅ Successfully seeded " + speciesList.size() + " Pokémon from CSV into PostGress!");
 
         } catch (Exception e) {
             System.err.println("Error seeding Pokémon data: " + e.getMessage());
