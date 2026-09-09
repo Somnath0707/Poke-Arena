@@ -5,20 +5,79 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PokeArena — Battle Simulator</title>
   <link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=DM+Mono:wght@400;500&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@500;600;700;800&family=DM+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
   <style>
-    :root{--ink:#f2f0e8;--muted:#9d9d9b;--dim:#5e6265;--panel:#191c1e;--panel2:#202426;--line:#34383a;--red:#e65045;--gold:#eebf48;--green:#60bb83;--hp:#64c778;--danger:#e95d55}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;color:var(--ink);background:#0d0f10;font:14px Manrope,sans-serif}body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.4;background:linear-gradient(90deg,transparent 49.94%,#ffffff08 50%,transparent 50.06%),linear-gradient(0deg,transparent 49.94%,#ffffff06 50%,transparent 50.06%);background-size:38px 38px;mask-image:linear-gradient(#000,transparent 72%)}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}.shell{max-width:1480px;margin:auto;padding:0 30px 56px}.topbar{min-height:74px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:16px}.brand{display:flex;align-items:center;color:var(--ink);text-decoration:none;font:800 29px "Barlow Condensed";letter-spacing:1.2px}.mark{position:relative;width:27px;height:27px;margin-right:11px;border:3px solid var(--ink);border-radius:50%;background:linear-gradient(var(--red) 0 43%,var(--ink) 43% 57%,#242729 57%)}.mark:after{content:"";position:absolute;inset:7px;border:2px solid #242729;border-radius:50%;background:var(--ink)}.topnav{display:flex;gap:5px}.topnav button{color:var(--muted);background:transparent;border:0;padding:10px 12px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.topnav button:hover,.topnav button.active{color:var(--ink)}.status{display:flex;align-items:center;gap:7px;color:#9dcaaa;font:500 11px "DM Mono";text-transform:uppercase}.status i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px #60bb8320}.page{display:none;padding-top:34px;animation:in .28s ease-out}.page.active{display:block}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.eyebrow{color:var(--gold);font:500 11px "DM Mono";letter-spacing:.12em;text-transform:uppercase}h1,h2,h3,p{margin:0}h1,h2,h3{font-family:"Barlow Condensed";letter-spacing:.025em}h1{font-size:48px;line-height:.92;font-weight:800;text-transform:uppercase}h3{font-size:18px;text-transform:uppercase}.page-head{display:flex;justify-content:space-between;align-items:end;padding-bottom:23px;border-bottom:1px solid var(--line);margin-bottom:25px;gap:16px}.page-head .eyebrow{margin-bottom:9px}.page-desc{max-width:370px;color:var(--muted);font-size:12px;line-height:1.65}.btn{min-height:42px;border:1px solid var(--line);color:var(--ink);padding:0 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.075em;background:#25292b;transition:.18s}.btn:hover:not(:disabled){transform:translateY(-2px);border-color:#777;background:#303436}.btn.primary{background:var(--gold);border-color:var(--gold);color:#191714}.btn.small{min-height:32px;padding:0 10px;font-size:10px}.panel{background:var(--panel);border:1px solid var(--line)}.panel-title{display:flex;align-items:center;justify-content:space-between;min-height:54px;padding:0 18px;border-bottom:1px solid var(--line)}.panel-title span,.section-note{color:var(--muted);font:11px "DM Mono"}.panel-body{padding:17px}
+    :root{--ink:#f2f0e8;--muted:#9d9d9b;--dim:#5e6265;--panel:#191c1e;--panel2:#202426;--line:#34383a;--red:#e65045;--gold:#eebf48;--green:#60bb83;--hp:#64c778;--danger:#e95d55}*{box-sizing:border-box}html{scroll-behavior:smooth}body{margin:0;min-width:320px;color:var(--ink);background:#0d0f10;font:14px Manrope,sans-serif}body:before{content:"";position:fixed;inset:0;z-index:-1;pointer-events:none;opacity:.4;background:linear-gradient(90deg,transparent 49.94%,#ffffff08 50%,transparent 50.06%),linear-gradient(0deg,transparent 49.94%,#ffffff06 50%,transparent 50.06%);background-size:38px 38px;mask-image:linear-gradient(#000,transparent 72%)}button,input,select{font:inherit}button{cursor:pointer}button:disabled{cursor:not-allowed;opacity:.45}.shell{max-width:1480px;margin:auto;padding:0 30px 56px}.topbar{min-height:74px;display:flex;align-items:center;justify-content:space-between;border-bottom:1px solid var(--line);gap:16px}.brand{display:flex;align-items:center;color:var(--ink);text-decoration:none;font:800 29px "Barlow Condensed";letter-spacing:1.2px}.mark{position:relative;width:27px;height:27px;margin-right:11px;border:3px solid var(--ink);border-radius:50%;background:linear-gradient(var(--red) 0 43%,var(--ink) 43% 57%,#242729 57%)}.mark:after{content:"";position:absolute;inset:7px;border:2px solid #242729;border-radius:50%;background:var(--ink)}.topnav{display:flex;gap:5px}.topnav button{color:var(--muted);background:transparent;border:0;padding:10px 12px;font-size:12px;font-weight:800;letter-spacing:.08em;text-transform:uppercase}.topnav button:hover,.topnav button.active{color:var(--ink)}.status{display:flex;align-items:center;gap:7px;color:#9dcaaa;font:500 11px "DM Mono";text-transform:uppercase}.status i{width:7px;height:7px;border-radius:50%;background:var(--green);box-shadow:0 0 0 3px #60bb8320}.page{display:none;padding-top:34px;animation:in .28s ease-out}.page.active{display:block}@keyframes in{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}.eyebrow{color:var(--gold);font:500 11px "DM Mono";letter-spacing:.12em;text-transform:uppercase}h1,h2,h3,p{margin:0}h1,h2,h3{font-family:"Barlow Condensed";letter-spacing:.025em}h1{font-size:48px;line-height:.92;font-weight:800;text-transform:uppercase}h3{font-size:18px;text-transform:uppercase}.page-head{display:flex;justify-content:space-between;align-items:end;padding-bottom:23px;border-bottom:1px solid var(--line);margin-bottom:25px;gap:16px}.page-head .eyebrow{margin-bottom:9px}.page-desc{max-width:370px;color:var(--muted);font-size:12px;line-height:1.65}.btn{min-height:42px;border:1px solid var(--line);color:var(--ink);padding:0 16px;font-size:12px;font-weight:800;text-transform:uppercase;letter-spacing:.075em;background:#25292b;transition:.18s;display:inline-flex;align-items:center;justify-content:center}.btn:hover:not(:disabled){transform:translateY(-2px);border-color:#777;background:#303436}.btn.primary{background:var(--gold);border-color:var(--gold);color:#191714}.btn.small{min-height:32px;padding:0 10px;font-size:10px}.panel{background:var(--panel);border:1px solid var(--line)}.panel-title{display:flex;align-items:center;justify-content:space-between;min-height:54px;padding:0 18px;border-bottom:1px solid var(--line)}.panel-title span,.section-note{color:var(--muted);font:11px "DM Mono"}.panel-body{padding:17px}
     .arena{position:relative;min-height:506px;overflow:hidden;background:radial-gradient(ellipse at 50% 26%,#355657 0,#1c3031 29%,#0f1a1b 65%,#0d1111 100%);border:1px solid #3b5754}.arena:before{content:"";position:absolute;left:50%;bottom:-45px;width:94%;height:48%;transform:translateX(-50%) perspective(400px) rotateX(58deg);border:1px solid #dbe4b740;border-radius:50%;background:radial-gradient(ellipse,#99c79d2e 0 18%,transparent 18.5% 33%,#bed3b715 33.5% 34%,transparent 34.5%)}.arena:after{content:"";position:absolute;inset:0;pointer-events:none;background:linear-gradient(105deg,#ffffff12,transparent 17%,transparent 84%,#ffffff0b),linear-gradient(to top,#0006,transparent 55%)}.arena-header{position:relative;z-index:2;display:flex;justify-content:space-between;padding:16px 20px;border-bottom:1px solid #e3f4df2b;background:#0b12129e}.round{font:500 11px "DM Mono";color:#bed3c4;letter-spacing:.08em}.arena-result{font:800 16px "Barlow Condensed";color:var(--gold);letter-spacing:.08em;text-transform:uppercase}.combatant{position:absolute;z-index:1;width:min(37%,430px);top:82px}.combatant.a{left:7%}.combatant.b{right:7%;top:121px;text-align:right}.combatant.b .hud,.combatant.b .sprite-wrap{margin-left:auto}.hud{width:250px;padding:12px 14px;background:#101515e8;border:1px solid #e0efd74d;box-shadow:0 12px 22px #0005}.hud-line{display:flex;justify-content:space-between;align-items:baseline;gap:6px}.hud-name{font:800 21px "Barlow Condensed";letter-spacing:.04em;text-transform:uppercase}.hud-level{color:#c1c7c5;font:10px "DM Mono"}.hud-owner{margin-top:2px;color:#a6b2ad;font:10px "DM Mono";overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hp-row{display:grid;grid-template-columns:25px 1fr;gap:6px;align-items:center;margin-top:9px}.hp-label{color:#e4c85a;font:bold 10px "DM Mono"}.hp{height:8px;background:#394244;overflow:hidden}.hp i{display:block;height:100%;width:100%;background:var(--hp);transition:.35s}.hp-num{margin-top:4px;text-align:right;color:#cdd1ce;font:10px "DM Mono"}.sprite-wrap{position:relative;width:245px;height:260px;display:grid;place-items:center}.sprite-wrap:after{content:"";position:absolute;bottom:20px;width:154px;height:32px;background:radial-gradient(ellipse,#0007,transparent 68%)}.pokemon-sprite{position:relative;z-index:1;width:200px;height:200px;object-fit:contain;filter:drop-shadow(0 15px 10px #0006);animation:idle 2.8s ease-in-out infinite}.combatant.b .pokemon-sprite{transform:scaleX(-1)}.pokemon-sprite.hidden{visibility:hidden}.sprite-fallback{position:absolute;z-index:1;display:none;width:116px;height:116px;border:2px solid #f0f0e6b3;border-radius:50%;place-items:center;color:#ecede6;font:800 36px "Barlow Condensed";background:#0003}.sprite-fallback.show{display:grid}.attacking .pokemon-sprite{animation:attack .34s ease-in-out 1}.combatant.b.attacking .pokemon-sprite{animation-name:attackB}.hit .pokemon-sprite{animation:hit .28s linear 1}.fainted .pokemon-sprite{animation:none;opacity:.28;transform:translateY(25px) rotate(14deg)!important;transition:.4s}.switching .pokemon-sprite{animation:switchin .5s ease-out 1}@keyframes idle{50%{transform:translateY(-8px)}}@keyframes attack{50%{transform:translateX(35px) scale(1.08)}}@keyframes attackB{50%{transform:translateX(-35px) scaleX(-1.08) scaleY(1.08)}}@keyframes hit{20%,60%{filter:brightness(2.8) drop-shadow(0 15px 10px #0006);transform:translateX(11px)}40%,80%{transform:translateX(-11px)}}@keyframes switchin{from{opacity:0;transform:translateY(35px) scale(.65)}to{opacity:1;transform:translateY(0) scale(1)}}.damage{position:absolute;z-index:4;opacity:0;color:#fff5e6;font:800 44px "Barlow Condensed";text-shadow:2px 3px #40231e;pointer-events:none}.damage.show{animation:damage .75s ease-out}@keyframes damage{0%{opacity:0;transform:translateY(14px) scale(.6)}18%{opacity:1;transform:translateY(0) scale(1.14)}75%{opacity:1}100%{opacity:0;transform:translateY(-35px) scale(.9)}}.effect{position:absolute;z-index:4;left:50%;top:47%;transform:translate(-50%,-50%);opacity:0;color:var(--gold);font:800 20px "Barlow Condensed";letter-spacing:.12em;text-transform:uppercase;text-shadow:1px 2px #222}.effect.show{animation:effect .8s ease}@keyframes effect{20%,70%{opacity:1}}
     .battle-deck{display:grid;grid-template-columns:1.15fr .85fr;border:1px solid var(--line);border-top:0}.launcher{padding:20px;border-right:1px solid var(--line);background:#15191a}.pickers{display:grid;grid-template-columns:1fr 58px 1fr;gap:12px;align-items:center;margin:16px 0}.vs{text-align:center;font:800 22px "Barlow Condensed";color:var(--red)}.field-label{display:block;margin-bottom:6px;color:var(--muted);font:10px "DM Mono";letter-spacing:.07em;text-transform:uppercase}.select,.input{width:100%;height:41px;color:var(--ink);background:#222729;border:1px solid #3c4445;padding:0 10px;outline:none}.select:focus,.input:focus{border-color:var(--gold)}.log-panel{display:flex;flex-direction:column;min-width:0;background:#111414}.log-head{display:flex;justify-content:space-between;padding:14px 16px;border-bottom:1px solid var(--line)}.log{flex:1;min-height:175px;max-height:175px;overflow:auto;padding:9px 16px}.log-item{padding:7px 0;border-bottom:1px solid #ffffff0f;color:#c3c6c1;font:11px/1.5 "DM Mono"}.log-item.round{color:var(--gold);font-weight:bold}.log-item.impact{color:#fff}.playback{display:flex;gap:8px;padding:12px 16px;border-top:1px solid var(--line)}
     .builder-layout{display:grid;grid-template-columns:360px 1fr;gap:18px}.stack{display:grid;gap:18px}.form-grid{display:grid;gap:12px}.form-message{min-height:16px;color:#ee9f96;font-size:11px;line-height:1.4}.roster-top{display:flex;align-items:center;justify-content:space-between;gap:12px}.roster-filter{display:flex;gap:9px}.roster-filter .input{width:220px}.roster{display:grid;grid-template-columns:repeat(auto-fill,minmax(170px,1fr));gap:9px;max-height:475px;overflow:auto;padding:14px}.mon-card{position:relative;min-height:135px;padding:13px;text-align:left;overflow:hidden;color:var(--ink);background:#202426;border:1px solid #353a3c;transition:.18s}.mon-card:hover{transform:translateY(-3px);border-color:#858a82}.mon-card.selected{border-color:var(--gold);box-shadow:inset 0 0 0 1px var(--gold)}.mon-card img{position:absolute;right:-6px;bottom:-2px;width:100px;height:100px;object-fit:contain;opacity:.88;filter:drop-shadow(0 8px 7px #0006)}.mon-name{position:relative;z-index:1;max-width:95px;font:700 19px/1 "Barlow Condensed";text-transform:uppercase}.mon-id{display:block;color:var(--muted);margin-bottom:5px;font:10px "DM Mono"}.types{position:relative;z-index:1;display:flex;gap:4px;margin-top:8px;flex-wrap:wrap}.type{padding:3px 6px;color:#161616;font:700 9px "DM Mono"}.type.NORMAL{background:#b1b3a6}.type.FIRE{background:#e46d4f}.type.WATER{background:#669bd7}.type.ELECTRIC{background:#e7c64c}.type.GRASS{background:#75b660}.type.ICE{background:#84c9c8}.type.FIGHTING{background:#bd5d4b}.type.POISON{background:#a77aba}.type.GROUND{background:#c5a168}.type.FLYING{background:#9aa8df}.type.PSYCHIC{background:#dc729a}.type.BUG{background:#a2aa54}.type.ROCK{background:#a9905b}.type.GHOST{background:#71659d}.type.DRAGON{background:#806fce}.type.DARK{background:#7b6b64}.type.STEEL{background:#a7afb5}.type.FAIRY{background:#d99abd}.stats{position:relative;z-index:1;display:flex;gap:7px;margin-top:12px;color:#b9bcba;font:10px "DM Mono"}.stats b{color:var(--ink)}.team-meta{display:grid;grid-template-columns:1fr 94px;gap:10px;margin-bottom:13px}.slots{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}.slot{position:relative;min-height:75px;padding:9px;color:var(--muted);border:1px dashed #444b4c;background:#161a1b}.slot.filled{border-style:solid;border-color:#4d5756}.slot-num{color:#737a77;font:10px "DM Mono"}.slot-main{display:flex;align-items:center;gap:6px;margin-top:5px}.slot-main img{width:38px;height:38px;object-fit:contain}.slot-name{overflow:hidden;text-overflow:ellipsis;white-space:nowrap;color:var(--ink);font:700 15px "Barlow Condensed";text-transform:uppercase}.slot-level{width:55px;margin-left:auto;color:var(--ink);background:#242a2b;border:1px solid #444c4d;padding:4px;font:10px "DM Mono"}.slot-remove{position:absolute;top:4px;right:5px;border:0;background:transparent;color:#aaa;font-size:16px}.empty-slot{margin-top:21px;color:#737a77;font:10px "DM Mono";text-transform:uppercase}.team-actions{display:flex;align-items:center;justify-content:space-between;gap:9px;margin-top:14px}.counter{color:var(--muted);font:10px "DM Mono"}.teams-list{display:grid;gap:8px}.team-card{display:grid;grid-template-columns:1fr auto;gap:12px;padding:13px;background:#202426;border:1px solid #363d3e}.team-card h3{font-size:19px}.team-card p{margin-top:2px;color:var(--muted);font:10px "DM Mono"}.team-mini{display:flex;gap:2px;margin-top:9px}.team-mini img{width:30px;height:30px;object-fit:contain}.empty{padding:28px 15px;color:var(--muted);text-align:center;font-size:12px;line-height:1.6}.loading{padding:35px;color:var(--muted);text-align:center;font:11px "DM Mono"}.spinner{display:inline-block;width:14px;height:14px;margin-right:8px;vertical-align:-2px;border:2px solid #59605e;border-top-color:var(--gold);border-radius:50%;animation:spin .7s linear infinite}@keyframes spin{to{transform:rotate(360deg)}}
-    .draft-shell{display:grid;gap:16px}.draft-identity{position:relative;display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:14px;align-items:end;padding:22px;background:linear-gradient(110deg,#242b2b,#191d1f 52%,#242019);border:1px solid #545b56;overflow:hidden}.draft-identity:after{content:"TEAM // 01";position:absolute;right:18px;top:12px;color:#eebf481c;font:800 68px "Barlow Condensed";pointer-events:none}.draft-field{position:relative;z-index:1}.draft-field .input,.draft-field .select{background:#0f1314cc}.draft-status{position:relative;z-index:1;align-self:stretch;display:flex;flex-direction:column;justify-content:flex-end;padding:9px 12px;border-left:1px solid #ffffff18}.draft-status b{font:800 26px "Barlow Condensed";letter-spacing:.03em}.draft-status span{color:#aab0ad;font:10px "DM Mono";line-height:1.45}.lineup-panel{overflow:hidden;border:1px solid #4b5351;background:#121617}.lineup-caption{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--line)}.lineup-caption p{color:var(--muted);font:11px "DM Mono"}.lineup{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;background:var(--line)}.slot{min-height:220px;padding:12px;background:#171b1c;border:0}.slot.filled{border:0;background:linear-gradient(155deg,#242a29,#171b1c)}.slot-num{display:block;color:#737a77;font:10px "DM Mono"}.slot-main{position:relative;display:block;margin:0}.slot-main img{display:block;width:100%;height:112px;object-fit:contain;filter:drop-shadow(0 10px 8px #0008);transition:transform .2s}.slot:hover .slot-main img{transform:translateY(-4px) scale(1.06)}.slot-name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 18px "Barlow Condensed";letter-spacing:.02em}.slot-level{position:absolute;right:0;bottom:0;width:58px;color:var(--ink);background:#111516;border:1px solid #46504f;padding:5px;font:10px "DM Mono"}.slot-remove{z-index:2}.empty-slot{height:157px;display:grid;place-content:center;gap:10px;margin:0;color:#777e7a;text-align:center;font:10px "DM Mono";line-height:1.5;text-transform:uppercase}.empty-slot:before{content:"+";margin:auto;color:var(--gold);font:400 36px "Barlow Condensed"}.slot.empty-pick{cursor:pointer;transition:background .2s}.slot.empty-pick:hover{background:#232a27}.draft-workbench{display:grid;grid-template-columns:minmax(0,1fr) 335px;gap:16px}.builder-roster{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));max-height:500px}.builder-roster .mon-card{min-height:123px}.builder-roster .mon-card img{width:88px;height:88px}.builder-roster .stats{display:none}.draft-side{display:grid;align-content:start;gap:16px}.trainer-card{background:#171b1c;border:1px solid var(--line)}.trainer-card .panel-body{padding:14px}.trainer-card .btn{width:100%}.deploy-bar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 18px;background:#24251f;border:1px solid #70623b}.deploy-bar p{color:#c9c4af;font-size:11px;line-height:1.5}.deploy-bar .btn{min-width:205px}.teams-list{display:grid;gap:8px}.team-card{display:grid;grid-template-columns:1fr auto;gap:12px;padding:13px;background:#202426;border:1px solid #363d3e}.team-card h3{font-size:19px}.team-card p{margin-top:2px;color:var(--muted);font:10px "DM Mono"}.team-mini{display:flex;gap:2px;margin-top:9px}.team-mini img{width:30px;height:30px;object-fit:contain}.leader-layout{display:grid;grid-template-columns:1.3fr .7fr;gap:18px}.rank-row{display:grid;grid-template-columns:45px 1fr 76px 62px;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line)}.rank-row:first-child .rank-num{color:var(--gold)}.rank-num{color:var(--dim);font:800 20px "Barlow Condensed"}.rank-name{font-weight:700}.rank-email{margin-top:2px;color:var(--muted);font:10px "DM Mono"}.record{color:#c9d7ce;text-align:right;font:10px "DM Mono"}.rate{color:var(--gold);text-align:right;font:700 12px "DM Mono"}.history-picker{display:flex;gap:8px;margin-bottom:10px}.history-list{max-height:400px;overflow:auto}.history-item{padding:13px 0;border-bottom:1px solid var(--line)}.history-item strong{font-size:13px}.history-item p{margin-top:3px;color:var(--muted);font:10px/1.5 "DM Mono"}.history-item button{margin-top:8px}.toast-wrap{position:fixed;z-index:8;right:20px;bottom:20px;display:grid;gap:8px}.toast{max-width:340px;padding:12px 14px;color:#eee;background:#292d2e;border-left:3px solid var(--gold);box-shadow:0 9px 30px #0006;font-size:12px;animation:toast .22s ease-out}.toast.error{border-color:var(--danger)}@keyframes toast{from{opacity:0;transform:translateY(9px)}}
+    .draft-shell{display:grid;gap:16px}.draft-identity{position:relative;display:grid;grid-template-columns:1.2fr .8fr .8fr;gap:14px;align-items:end;padding:22px;background:linear-gradient(110deg,#242b2b,#191d1f 52%,#242019);border:1px solid #545b56;overflow:hidden}.draft-identity:after{content:"TEAM // 01";position:absolute;right:18px;top:12px;color:#eebf481c;font:800 68px "Barlow Condensed";pointer-events:none}.draft-field{position:relative;z-index:1}.draft-field .input,.draft-field .select{background:#0f1314cc}.draft-status{position:relative;z-index:1;align-self:stretch;display:flex;flex-direction:column;justify-content:flex-end;padding:9px 12px;border-left:1px solid #ffffff18}.draft-status b{font:800 26px "Barlow Condensed";letter-spacing:.03em}.draft-status span{color:#aab0ad;font:10px "DM Mono";line-height:1.45}.lineup-panel{overflow:hidden;border:1px solid #4b5351;background:#121617}.lineup-caption{display:flex;align-items:center;justify-content:space-between;padding:13px 18px;border-bottom:1px solid var(--line)}.lineup-caption p{color:var(--muted);font:11px "DM Mono"}.lineup{display:grid;grid-template-columns:repeat(6,minmax(0,1fr));gap:1px;background:var(--line)}.slot{min-height:220px;padding:12px;background:#171b1c;border:0}.slot.filled{border:0;background:linear-gradient(155deg,#242a29,#171b1c)}.slot-num{display:block;color:#737a77;font:10px "DM Mono"}.slot-main{position:relative;display:block;margin:0}.slot-main img{display:block;width:100%;height:112px;object-fit:contain;filter:drop-shadow(0 10px 8px #0008);transition:transform .2s}.slot:hover .slot-main img{transform:translateY(-4px) scale(1.06)}.slot-name{display:block;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font:700 18px "Barlow Condensed";letter-spacing:.02em}.slot-level{position:absolute;right:0;bottom:0;width:58px;color:var(--ink);background:#111516;border:1px solid #46504f;padding:5px;font:10px "DM Mono"}.slot-remove{z-index:2}.empty-slot{height:157px;display:grid;place-content:center;gap:10px;margin:0;color:#777e7a;text-align:center;font:10px "DM Mono";line-height:1.5;text-transform:uppercase}.empty-slot:before{content:"+";margin:auto;color:var(--gold);font:400 36px "Barlow Condensed"}.slot.empty-pick{cursor:pointer;transition:background .2s}.slot.empty-pick:hover{background:#232a27}.draft-workbench{display:grid;grid-template-columns:minmax(0,1fr) 335px;gap:16px}.builder-roster{grid-template-columns:repeat(auto-fill,minmax(150px,1fr));max-height:500px}.builder-roster .mon-card{min-height:123px}.builder-roster .mon-card img{width:88px;height:88px}.builder-roster .stats{display:none}.draft-side{display:grid;align-content:start;gap:16px}.trainer-card{background:#171b1c;border:1px solid var(--line)}.trainer-card .panel-body{padding:14px}.trainer-card .btn{width:100%}.deploy-bar{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:16px 18px;background:#24251f;border:1px solid #70623b}.deploy-bar p{color:#c9c4af;font-size:11px;line-height:1.5}.deploy-bar .btn{min-width:205px}.teams-list{display:grid;gap:8px}.team-card{display:grid;grid-template-columns:1fr auto;gap:12px;padding:13px;background:#202426;border:1px solid #363d3e}.team-card h3{font-size:19px}.team-card p{margin-top:2px;color:var(--muted);font:10px "DM Mono"}.team-mini{display:flex;gap:2px;margin-top:9px}.team-mini img{width:30px;height:30px;object-fit:contain}.leader-layout{display:grid;grid-template-columns:1.3fr .7fr;gap:18px}.rank-row{display:grid;grid-template-columns:45px 1fr 76px 62px;align-items:center;gap:8px;padding:12px 16px;border-bottom:1px solid var(--line)}.rank-row:first-child .rank-num{color:var(--gold)}.rank-num{color:var(--dim);font:800 20px "Barlow Condensed"}.rank-name{font-weight:700}.rank-email{margin-top:2px;color:var(--muted);font:10px "DM Mono"}.record{color:#c9d7ce;text-align:right;font:10px "DM Mono"}.rate{color:var(--gold);text-align:right;font:700 12px "DM Mono"}.history-picker{display:flex;gap:8px;margin-bottom:10px}.history-list{max-height:400px;overflow:auto}.history-item{padding:13px 0;border-bottom:1px solid var(--line)}.history-item strong{font-size:13px}.history-item p{margin-top:3px;color:var(--muted);font:10px/1.5 "DM Mono"}.history-item button{margin-top:8px}.toast-wrap{position:fixed;z-index:1005;right:20px;bottom:20px;display:grid;gap:8px}.toast{max-width:340px;padding:12px 14px;color:#eee;background:#292d2e;border-left:3px solid var(--gold);box-shadow:0 9px 30px #0006;font-size:12px;animation:toast .22s ease-out}.toast.error{border-color:var(--danger)}@keyframes toast{from{opacity:0;transform:translateY(9px)}}
     .sound-btn{color:#d2cbaf;background:#252822;border:1px solid #5e5b43;padding:7px 10px;font:10px "DM Mono";letter-spacing:.05em}.sound-btn:hover{border-color:var(--gold);color:var(--gold)}.mon-card{isolation:isolate;background:linear-gradient(145deg,#2b3133,#1a1e20 64%);border-color:#42494a}.mon-card:before{content:"";position:absolute;inset:0;z-index:-1;opacity:.36;background:linear-gradient(135deg,transparent 55%,#ffffff0c 55.5%,transparent 56%),radial-gradient(circle at 88% 84%,var(--card-accent,#eebf48) 0 1px,transparent 2px);background-size:auto,12px 12px}.mon-card:hover{border-color:var(--card-accent,#eebf48);box-shadow:0 13px 24px #0005}.mon-card .card-art{position:absolute;right:0;bottom:0;width:102px;height:106px;z-index:0}.mon-card .card-art img{position:static;width:100%;height:100%;object-fit:contain;opacity:1;filter:drop-shadow(0 10px 8px #000b)}.mon-card .mon-id,.mon-card .mon-name,.mon-card .types{z-index:1}.mon-card .stats{position:absolute;left:13px;bottom:10px;z-index:1;display:grid;grid-template-columns:repeat(2,auto);gap:3px 8px;margin:0;color:#b9bcba;font:9px "DM Mono"}.builder-roster .stats{display:grid}.builder-roster .mon-card{min-height:156px}.builder-roster .mon-card .card-art{width:118px;height:118px}.builder-roster .mon-card .stats{display:grid}.type{border:1px solid #ffffff29;text-shadow:none}.attack-flash{position:absolute;z-index:3;top:45%;width:0;height:5px;opacity:0;background:linear-gradient(90deg,transparent,#fff,var(--fx,#eebf48),transparent);box-shadow:0 0 12px var(--fx,#eebf48);transform:rotate(-8deg);pointer-events:none}.attack-flash.from-a{left:25%;animation:beamA .38s ease-out}.attack-flash.from-b{right:25%;animation:beamB .38s ease-out}@keyframes beamA{20%{opacity:1;width:45%}100%{opacity:0;width:55%}}@keyframes beamB{20%{opacity:1;width:45%}100%{opacity:0;width:55%}}.arena.impact{animation:arenaImpact .18s linear 1}@keyframes arenaImpact{50%{filter:brightness(1.32) saturate(1.3)}}
+
+    /* Auth & Profile Styles */
+    .auth-bar{display:flex;align-items:center;gap:10px}
+    .auth-profile{display:flex;align-items:center;gap:10px;background:#181d1e;border:1px solid #364240;padding:5px 12px}
+    .auth-avatar{width:22px;height:22px;border-radius:50%;background:linear-gradient(135deg,var(--gold),#d49626);display:grid;place-items:center;color:#111;font:800 11px "Barlow Condensed"}
+    .auth-user-info{display:flex;flex-direction:column}
+    .auth-user-name{font:700 13px "Barlow Condensed";letter-spacing:.04em;color:var(--ink);text-transform:uppercase;line-height:1}
+    .auth-user-role{font:600 8px "DM Mono";color:var(--gold);letter-spacing:.08em;margin-top:2px}
+    .btn-auth{background:var(--gold);color:#121415;border:0;padding:8px 14px;font:800 11px "DM Mono";letter-spacing:.08em;text-transform:uppercase;cursor:pointer;transition:.18s}
+    .btn-auth:hover{background:#ffd56b;transform:translateY(-1px)}
+    .btn-logout{background:transparent;border:1px solid #474f51;color:#aaa;padding:4px 8px;font:700 9px "DM Mono";text-transform:uppercase;cursor:pointer;transition:.15s}
+    .btn-logout:hover{border-color:var(--red);color:var(--red)}
+
+    /* Modal System */
+    .modal-overlay{position:fixed;inset:0;z-index:999;background:rgba(7,9,10,.86);backdrop-filter:blur(8px);display:none;place-items:center;padding:16px;animation:fadeIn .2s ease-out}
+    .modal-overlay.open{display:grid}
+    .auth-modal{position:relative;width:100%;max-width:430px;background:#141718;border:1px solid #3e4847;box-shadow:0 24px 64px rgba(0,0,0,.85),0 0 0 1px rgba(238,191,72,.15);animation:modalIn .24s cubic-bezier(.16,1,.3,1);overflow:hidden}
+    .auth-modal:before{content:"";position:absolute;top:0;left:0;right:0;height:3px;background:linear-gradient(90deg,var(--red),var(--gold),var(--hp))}
+    .auth-modal-header{display:flex;justify-content:space-between;align-items:center;padding:18px 22px;border-bottom:1px solid var(--line);background:#0e1112}
+    .auth-modal-title{font:800 21px "Barlow Condensed";letter-spacing:.06em;color:var(--ink);text-transform:uppercase}
+    .auth-modal-close{background:transparent;border:0;color:var(--muted);font-size:22px;cursor:pointer;line-height:1}
+    .auth-modal-close:hover{color:var(--ink)}
+    .auth-nav{display:flex;border-bottom:1px solid var(--line);background:#101314}
+    .auth-nav-tab{flex:1;padding:13px 0;background:transparent;border:0;color:var(--muted);font:700 11px "DM Mono";letter-spacing:.1em;text-transform:uppercase;cursor:pointer;border-bottom:2px solid transparent;transition:.15s}
+    .auth-nav-tab.active{color:var(--gold);border-bottom-color:var(--gold);background:#181c1e}
+    .auth-modal-body{padding:22px}
+    .auth-alert{display:none;padding:10px 12px;margin-bottom:14px;font:11px "DM Mono";line-height:1.4}
+    .auth-alert.error{display:block;background:#351917;border:1px solid #6f2622;color:#ff968d}
+    .auth-alert.success{display:block;background:#142d1f;border:1px solid #23653f;color:#8be3af}
+    .auth-form{display:grid;gap:14px}
+    .auth-form .field-label{margin-bottom:4px}
+    .auth-actions{margin-top:8px}
+    .auth-actions .btn{width:100%}
+    .auth-footer{margin-top:16px;text-align:center;font:10px "DM Mono";color:var(--muted)}
+    .auth-footer a{color:var(--gold);text-decoration:none;cursor:pointer}
+    .auth-footer a:hover{text-decoration:underline}
+
+    /* Lab Auth State Widget */
+    .lab-auth-card{padding:16px;border:1px solid #3d4a48;background:linear-gradient(135deg,#192120,#121617);margin-bottom:14px}
+    .lab-auth-card .eyebrow{color:var(--hp);margin-bottom:4px}
+    .lab-auth-name{font:800 24px "Barlow Condensed";color:var(--gold);text-transform:uppercase;letter-spacing:.04em}
+
+    @keyframes fadeIn{from{opacity:0}to{opacity:1}}
+    @keyframes modalIn{from{opacity:0;transform:scale(.95) translateY(10px)}to{opacity:1;transform:scale(1) translateY(0)}}
+
     @media(max-width:1040px){.draft-workbench{grid-template-columns:1fr}.draft-side{grid-template-columns:1fr 1fr}.lineup{grid-template-columns:repeat(3,1fr)}}@media(max-width:850px){.shell{padding:0 16px 40px}.topbar{min-height:62px}.topnav{overflow-x:auto}.topnav button{padding:8px 6px;font-size:10px;white-space:nowrap}.status{display:none}.page{padding-top:25px}h1{font-size:38px}.page-head{align-items:start;flex-direction:column}.arena{min-height:435px}.combatant{top:75px;width:48%}.combatant.a{left:1%}.combatant.b{right:1%;top:158px}.hud{width:188px;padding:9px}.sprite-wrap{width:190px;height:205px}.pokemon-sprite{width:150px;height:150px}.battle-deck,.builder-layout,.leader-layout{grid-template-columns:1fr}.launcher{border-right:0;border-bottom:1px solid var(--line)}.roster-top{align-items:stretch;flex-direction:column}.roster-filter .input{width:100%}.team-card{grid-template-columns:1fr}.draft-identity{grid-template-columns:1fr 1fr}.draft-status{grid-column:1/-1;border-left:0;border-top:1px solid #ffffff18}.lineup{grid-template-columns:repeat(2,1fr)}.draft-side{grid-template-columns:1fr}}@media(max-width:490px){.brand{font-size:24px}.topnav{gap:0}.topnav button{font-size:9px}.arena{min-height:408px}.combatant{top:72px}.combatant.b{top:168px}.hud{width:152px}.hud-name{font-size:17px}.sprite-wrap{width:150px;height:176px}.pokemon-sprite{width:126px;height:126px}.pickers{grid-template-columns:1fr 28px 1fr;gap:5px}.vs{font-size:17px}.rank-row{grid-template-columns:31px 1fr 55px 48px;padding:10px}.damage{font-size:34px}.draft-identity{grid-template-columns:1fr}.lineup{grid-template-columns:1fr 1fr}.slot{min-height:196px}.slot-main img{height:92px}.deploy-bar{align-items:stretch;flex-direction:column}.deploy-bar .btn{width:100%}}
   </style>
 </head>
 <body>
 <main class="shell">
-  <header class="topbar"><a class="brand" href="#battle" aria-label="PokeArena home"><i class="mark"></i>POKEARENA</a><nav class="topnav" aria-label="Main navigation"><button class="active" data-page="battle">Battle</button><button data-page="pokedex">Pokédex</button><button data-page="builder">Team Lab</button><button data-page="rankings">Rankings</button></nav><div style="display:flex;align-items:center;gap:9px"><button class="sound-btn" id="soundToggle" aria-pressed="true">SFX ON</button><div class="status"><i></i><span id="connectionStatus">arena online</span></div></div></header>
+  <header class="topbar">
+    <a class="brand" href="#battle" aria-label="PokeArena home"><i class="mark"></i>POKEARENA</a>
+    <nav class="topnav" aria-label="Main navigation">
+      <button class="active" data-page="battle">Battle</button>
+      <button data-page="pokedex">Pokédex</button>
+      <button data-page="builder">Team Lab</button>
+      <button data-page="rankings">Rankings</button>
+    </nav>
+    <div style="display:flex;align-items:center;gap:12px">
+      <button class="sound-btn" id="soundToggle" aria-pressed="true">SFX ON</button>
+      <div class="auth-bar" id="authBar"></div>
+      <div class="status"><i></i><span id="connectionStatus">arena online</span></div>
+    </div>
+  </header>
+
   <section class="page active" id="battle-page">
     <div class="page-head"><div><div class="eyebrow">Live simulation</div><h1>Battle Arena</h1></div><p class="page-desc">Pick two saved teams, then watch the server’s combat log unfold as a fast, visual match replay.</p></div>
     <section class="arena" aria-label="Battle field"><div class="arena-header"><span class="round" id="roundLabel">STANDBY · NO MATCH LOADED</span><span class="arena-result" id="resultLabel">Awaiting challengers</span></div>
@@ -26,48 +85,457 @@
       <article class="combatant b" id="combatantB"><div class="hud"><div class="hud-line"><b class="hud-name" id="nameB">Team B</b><span class="hud-level" id="levelB">LV —</span></div><div class="hud-owner" id="ownerB">Choose a team to begin</div><div class="hp-row"><span class="hp-label">HP</span><div class="hp"><i id="hpB"></i></div></div><div class="hp-num" id="hpNumB">— / —</div></div><div class="sprite-wrap"><img class="pokemon-sprite hidden" id="spriteB" alt="Team B active Pokémon"><span class="sprite-fallback" id="fallbackB">?</span></div></article><div class="attack-flash" id="attackFlash"></div><div class="damage" id="damageA"></div><div class="damage" id="damageB"></div><div class="effect" id="effect"></div></section>
     <div class="battle-deck"><div class="launcher"><h3>Match Setup</h3><div class="pickers"><div><label class="field-label" for="teamA">Challenger A</label><select id="teamA" class="select"><option value="">No saved teams</option></select></div><b class="vs">VS</b><div><label class="field-label" for="teamB">Challenger B</label><select id="teamB" class="select"><option value="">No saved teams</option></select></div></div><button class="btn primary" id="startBattle">Simulate battle</button></div><aside class="log-panel"><div class="log-head"><h3>Match Feed</h3><span class="section-note" id="feedState">Idle</span></div><div class="log" id="battleLog"><div class="log-item">The arena is waiting for two registered teams.</div></div><div class="playback"><button class="btn small" id="pausePlayback" disabled>Pause</button><button class="btn small" id="nextPlayback" disabled>Next event</button><button class="btn small" id="replayPlayback" disabled>Replay</button></div></aside></div>
   </section>
+
   <section class="page" id="pokedex-page"><div class="page-head"><div><div class="eyebrow">Species database</div><h1>Pokédex</h1></div><p class="page-desc">Every creature card is powered directly by the server’s species catalogue. Select one to add it to the active build.</p></div><div class="panel"><div class="panel-title roster-top"><h3>Available Species</h3><div class="roster-filter"><input id="searchSpecies" class="input" placeholder="Search by name"><select id="typeFilter" class="select"><option value="">All types</option></select></div></div><div class="roster" id="roster"><div class="loading"><i class="spinner"></i>Loading Pokédex</div></div></div></section>
+
   <section class="page" id="builder-page">
     <div class="page-head"><div><div class="eyebrow">Roster forge · build then battle</div><h1>Team Lab</h1></div><p class="page-desc">This is your draft room. Pick a trainer, name the squad, then fill the six fighting slots from the live Pokédex below.</p></div>
     <div class="draft-shell">
       <section class="draft-identity"><div class="draft-field"><label class="field-label">Squad callsign</label><input class="input" id="teamName" minlength="2" maxlength="30" placeholder="Name your squad"></div><div class="draft-field"><label class="field-label">Trainer command</label><select class="select" id="teamTrainer"><option value="">Choose trainer</option></select></div><div class="draft-status"><b id="teamCounter">0 / 6</b><span id="teamCoverage">Recruit up to six fighters<br>Level 1–100 allowed</span></div></section>
       <section class="lineup-panel"><div class="lineup-caption"><div><h3>Active Lineup</h3><p>Tap an open slot or pick a fighter from the roster.</p></div><span class="section-note">ORDER = BATTLE ORDER</span></div><div class="lineup" id="teamSlots"></div></section>
       <div class="draft-workbench"><section class="panel"><div class="panel-title roster-top"><div><h3>Recruit Fighters</h3><span class="section-note">Click to add to the next open slot</span></div><div class="roster-filter"><input id="builderSearch" class="input" placeholder="Find a Pokémon"><select id="builderType" class="select"><option value="">All types</option></select></div></div><div class="roster builder-roster" id="builderRoster"><div class="loading"><i class="spinner"></i>Loading roster</div></div></section>
-        <aside class="draft-side"><section class="trainer-card"><div class="panel-title"><h3>New Trainer</h3><span>Optional</span></div><form class="panel-body form-grid" id="trainerForm"><div><label class="field-label">Trainer name</label><input class="input" id="trainerName" minlength="3" maxlength="30" required placeholder="e.g. Nova Reed"></div><div><label class="field-label">Email</label><input class="input" id="trainerEmail" type="email" required placeholder="nova@arena.test"></div><div class="form-message" id="trainerMessage"></div><button class="btn" type="submit">Register trainer</button></form></section><section class="panel"><div class="panel-title"><h3>Deployed Squads</h3><span id="registryCount">0 saved locally</span></div><div class="panel-body teams-list" id="teamRegistry"><div class="empty">Your deployed squads will appear here and become available in the arena.</div></div></section></aside></div>
+        <aside class="draft-side">
+          <section class="trainer-card">
+            <div class="panel-title"><h3>Commander License</h3><span id="labAuthSub">Security</span></div>
+            <div class="panel-body" id="labAuthContainer"></div>
+          </section>
+          <section class="panel"><div class="panel-title"><h3>Deployed Squads</h3><span id="registryCount">0 saved locally</span></div><div class="panel-body teams-list" id="teamRegistry"><div class="empty">Your deployed squads will appear here and become available in the arena.</div></div></section>
+        </aside></div>
       <div class="deploy-bar"><div><h3>Ready to deploy?</h3><p id="teamMessage">Your team is saved to the actual PokeArena backend. At least one fighter is required.</p></div><button class="btn primary" id="deployTeam">Deploy to arena</button></div>
     </div>
   </section>
+
   <section class="page" id="rankings-page"><div class="page-head"><div><div class="eyebrow">Competitive record</div><h1>Rankings & History</h1></div><p class="page-desc">The table is the backend leaderboard. Select a listed trainer to retrieve their latest recorded battles and replay a completed log.</p></div><div class="leader-layout"><section class="panel"><div class="panel-title"><h3>Leaderboard</h3><button class="btn small" id="refreshRanks">Refresh</button></div><div id="leaderboard"><div class="loading"><i class="spinner"></i>Loading standings</div></div></section><section class="panel"><div class="panel-title"><h3>Battle History</h3><span>GET /history/{name}</span></div><div class="panel-body"><div class="history-picker"><select id="historyTrainer" class="select"><option value="">Choose trainer</option></select><button class="btn small" id="loadHistory">Load</button></div><div class="history-list" id="historyList"><div class="empty">Choose a trainer from the leaderboard to see their server-side battle history.</div></div></div></section></div></section>
-</main><div class="toast-wrap" id="toasts"></div>
+</main>
+
+<!-- Modern Cyberpunk Auth Modal -->
+<div class="modal-overlay" id="authModal" role="dialog" aria-modal="true">
+  <div class="auth-modal">
+    <div class="auth-modal-header">
+      <div class="auth-modal-title" id="authModalTitle">TRAINER AUTHENTICATION</div>
+      <button class="auth-modal-close" id="authModalClose" aria-label="Close modal">×</button>
+    </div>
+    <div class="auth-nav">
+      <button class="auth-nav-tab active" id="tabLogin">Sign In</button>
+      <button class="auth-nav-tab" id="tabRegister">Register License</button>
+    </div>
+    <div class="auth-modal-body">
+      <div class="auth-alert" id="authAlert"></div>
+
+      <!-- Login Form -->
+      <form class="auth-form" id="loginForm">
+        <div>
+          <label class="field-label" for="loginUsername">Trainer Callsign (Name)</label>
+          <input class="input" id="loginUsername" required autocomplete="username" placeholder="e.g. AshKetchum">
+        </div>
+        <div>
+          <label class="field-label" for="loginPassword">Passcode</label>
+          <input class="input" id="loginPassword" type="password" required autocomplete="current-password" placeholder="••••••••">
+        </div>
+        <div class="auth-actions">
+          <button class="btn primary" type="submit" id="loginBtn">Authorize & Enter</button>
+        </div>
+        <div class="auth-footer">Need a new trainer license? <a id="switchToRegister">Register here</a></div>
+      </form>
+
+      <!-- Register Form -->
+      <form class="auth-form" id="registerForm" style="display:none">
+        <div>
+          <label class="field-label" for="regName">Trainer Callsign</label>
+          <input class="input" id="regName" minlength="3" maxlength="30" required placeholder="e.g. Red, Blue, Gary">
+        </div>
+        <div>
+          <label class="field-label" for="regEmail">Radar Frequency (Email)</label>
+          <input class="input" id="regEmail" type="email" required placeholder="trainer@arena.com">
+        </div>
+        <div>
+          <label class="field-label" for="regPassword">Security Passcode</label>
+          <input class="input" id="regPassword" type="password" minlength="4" required placeholder="Secret password (min 4 chars)">
+        </div>
+        <div class="auth-actions">
+          <button class="btn primary" type="submit" id="registerBtn">Create License & Sign In</button>
+        </div>
+        <div class="auth-footer">Already licensed? <a id="switchToLogin">Sign in</a></div>
+      </form>
+    </div>
+  </div>
+</div>
+
+<div class="toast-wrap" id="toasts"></div>
+
 <script>
 const API_BASE=window.POKE_ARENA_API_BASE_URL||'/api', $=id=>document.getElementById(id), TYPES=['Normal','Fire','Water','Electric','Grass','Ice','Fighting','Poison','Ground','Flying','Psychic','Bug','Rock','Ghost','Dragon','Dark','Steel','Fairy'];
+
+// Auth State Manager
+const auth = {
+  token: localStorage.getItem('pokeArena.token') || null,
+  trainerName: localStorage.getItem('pokeArena.trainerName') || null,
+  set(token, name) {
+    this.token = token;
+    this.trainerName = name;
+    if (token) {
+      localStorage.setItem('pokeArena.token', token);
+      localStorage.setItem('pokeArena.trainerName', name);
+    } else {
+      localStorage.removeItem('pokeArena.token');
+      localStorage.removeItem('pokeArena.trainerName');
+    }
+    renderAuthUI();
+  },
+  logout() {
+    this.set(null, null);
+    toast('Commander logged out.');
+  },
+  isLoggedIn() {
+    return !!this.token;
+  }
+};
+
 const state={species:[],trainers:[],teams:loadTeams(),draft:[],battle:null,eventIndex:0,playing:false,timer:null,speed:1.35};
-const api={async request(path,opt={}){try{let r=await fetch(API_BASE+path,{headers:{'Content-Type':'application/json',...(opt.headers||{})},...opt}),raw=await r.text(),d;try{d=raw?JSON.parse(raw):null}catch{d=raw}if(!r.ok)throw Error(d?.message||d?.error||`Request failed (${r.status})`);return d}catch(e){if(e instanceof TypeError)throw Error('Network connection failed. Is PokeArena running?');throw e}},species(){return this.request('/species')},leaderboard(){return this.request('/leaderboard')},createTrainer(p){return this.request('/trainers',{method:'POST',body:JSON.stringify(p)})},createTeam(p){return this.request('/teams',{method:'POST',body:JSON.stringify(p)})},simulate(p){return this.request('/battles/simulate',{method:'POST',body:JSON.stringify(p)})},history(n){return this.request('/battles/history/'+encodeURIComponent(n))}};
-function loadTeams(){try{let t=JSON.parse(localStorage.getItem('pokeArena.teams')||'[]');if(t.length)return t}catch{}return[{"teamId":1,"teamName":"Pallet Champions","trainerId":1,"trainerName":"Ash Ketchum","members":[{"id":1,"speciesName":"Pikachu","primaryType":"Electric","level":88,"slotOrder":1},{"id":2,"speciesName":"Charizard","primaryType":"Fire","level":85,"slotOrder":2},{"id":3,"speciesName":"Snorlax","primaryType":"Normal","level":82,"slotOrder":3},{"id":4,"speciesName":"Lucario","primaryType":"Fighting","level":84,"slotOrder":4},{"id":5,"speciesName":"Gengar","primaryType":"Ghost","level":80,"slotOrder":5},{"id":6,"speciesName":"Greninja","primaryType":"Water","level":86,"slotOrder":6}]},{"teamId":2,"teamName":"Blue Rivalry","trainerId":2,"trainerName":"Gary Oak","members":[{"id":7,"speciesName":"Blastoise","primaryType":"Water","level":86,"slotOrder":1},{"id":8,"speciesName":"Arcanine","primaryType":"Fire","level":83,"slotOrder":2},{"id":9,"speciesName":"Electivire","primaryType":"Electric","level":82,"slotOrder":3},{"id":10,"speciesName":"Scizor","primaryType":"Bug","level":84,"slotOrder":4},{"id":11,"speciesName":"Umbreon","primaryType":"Dark","level":81,"slotOrder":5},{"id":12,"speciesName":"Tyranitar","primaryType":"Rock","level":85,"slotOrder":6}]}];}function saveTeams(){localStorage.setItem('pokeArena.teams',JSON.stringify(state.teams))}function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}function slug(n){return String(n||'').toLowerCase().replace(/\s*\([^)]*\)/g,'').replace(/[^a-z0-9]/g,'')}function sprite(n){return `https://play.pokemonshowdown.com/sprites/ani/${slug(n)}.gif`}function toast(m,err=false){let e=document.createElement('div');e.className='toast'+(err?' error':'');e.textContent=m;$('toasts').append(e);setTimeout(()=>e.remove(),4300)}function badge(t){return t?`<span class="type ${esc(String(t).toUpperCase())}">${esc(t)}</span>`:''}
-let audioContext=null,sfxEnabled=true;const typeColor={Fire:'#f37845',Water:'#52a7ef',Grass:'#75c77b',Electric:'#f3c84b',Psychic:'#db71ad',Ice:'#8bd8df',Poison:'#b87bc8',Dragon:'#8b78dd',Dark:'#8c7570',Fighting:'#df705a',Ground:'#cba66d',Flying:'#a8b6e9',Bug:'#b3c764',Rock:'#baa36a',Ghost:'#8a7ab8',Steel:'#b6c3ca',Fairy:'#e5a3c4',Normal:'#c5c6b4'};function sfx(kind,type){if(!sfxEnabled)return;try{audioContext??=new (window.AudioContext||window.webkitAudioContext)();if(audioContext.state==='suspended')audioContext.resume();let t=audioContext.currentTime,o=audioContext.createOscillator(),g=audioContext.createGain(),isHit=kind==='hit',isFaint=kind==='faint';o.type=isHit?'square':isFaint?'sawtooth':'triangle';o.frequency.setValueAtTime(isHit?180:isFaint?95:type==='Electric'?740:type==='Water'?390:type==='Fire'?210:480,t);o.frequency.exponentialRampToValueAtTime(isHit?65:isFaint?35:210,t+(isFaint?.34:.16));g.gain.setValueAtTime(isHit?.18:.11,t);g.gain.exponentialRampToValueAtTime(.002,t+(isFaint?.34:.16));o.connect(g).connect(audioContext.destination);o.start(t);o.stop(t+(isFaint?.36:.19))}catch{}}
+
+// API Client with automatic JWT injection
+const api={
+  async request(path,opt={}){
+    try{
+      let headers={'Content-Type':'application/json',...(opt.headers||{})};
+      if(auth.token){
+        headers['Authorization']='Bearer '+auth.token;
+      }
+      let r=await fetch(API_BASE+path,{...opt,headers}),raw=await r.text(),d;
+      try{d=raw?JSON.parse(raw):null}catch{d=raw}
+      if(!r.ok){
+        if(r.status===401||r.status===403){
+          if(auth.isLoggedIn()){
+            toast('Session expired or unauthorized. Please re-authenticate.',true);
+            auth.logout();
+          }
+          openAuthModal('login');
+        }
+        throw Error(d?.message||d?.error||(typeof d==='string'?d:`Request failed (${r.status})`));
+      }
+      return d;
+    }catch(e){
+      if(e instanceof TypeError)throw Error('Network connection failed. Is PokeArena running?');
+      throw e;
+    }
+  },
+  species(){return this.request('/species')},
+  leaderboard(){return this.request('/leaderboard')},
+  register(p){return this.request('/auth/register',{method:'POST',body:JSON.stringify(p)})},
+  login(p){return this.request('/auth/login',{method:'POST',body:JSON.stringify(p)})},
+  createTeam(p){return this.request('/teams',{method:'POST',body:JSON.stringify(p)})},
+  simulate(p){return this.request('/battles/simulate',{method:'POST',body:JSON.stringify(p)})},
+  history(n){return this.request('/battles/history/'+encodeURIComponent(n))}
+};
+
+function loadTeams(){try{let t=JSON.parse(localStorage.getItem('pokeArena.teams')||'[]');if(t.length)return t}catch{}return[{"teamId":1,"teamName":"Pallet Champions","trainerId":1,"trainerName":"Ash Ketchum","members":[{"id":1,"speciesName":"Pikachu","primaryType":"Electric","level":88,"slotOrder":1},{"id":2,"speciesName":"Charizard","primaryType":"Fire","level":85,"slotOrder":2},{"id":3,"speciesName":"Snorlax","primaryType":"Normal","level":82,"slotOrder":3},{"id":4,"speciesName":"Lucario","primaryType":"Fighting","level":84,"slotOrder":4},{"id":5,"speciesName":"Gengar","primaryType":"Ghost","level":80,"slotOrder":5},{"id":6,"speciesName":"Greninja","primaryType":"Water","level":86,"slotOrder":6}]},{"teamId":2,"teamName":"Blue Rivalry","trainerId":2,"trainerName":"Gary Oak","members":[{"id":7,"speciesName":"Blastoise","primaryType":"Water","level":86,"slotOrder":1},{"id":8,"speciesName":"Arcanine","primaryType":"Fire","level":83,"slotOrder":2},{"id":9,"speciesName":"Electivire","primaryType":"Electric","level":82,"slotOrder":3},{"id":10,"speciesName":"Scizor","primaryType":"Bug","level":84,"slotOrder":4},{"id":11,"speciesName":"Umbreon","primaryType":"Dark","level":81,"slotOrder":5},{"id":12,"speciesName":"Tyranitar","primaryType":"Rock","level":85,"slotOrder":6}]}];}
+function saveTeams(){localStorage.setItem('pokeArena.teams',JSON.stringify(state.teams))}
+function esc(s){return String(s??'').replace(/[&<>'"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[c]))}
+function slug(n){return String(n||'').toLowerCase().replace(/\s*\([^)]*\)/g,'').replace(/[^a-z0-9]/g,'')}
+function sprite(n){return `https://play.pokemonshowdown.com/sprites/ani/${slug(n)}.gif`}
+function toast(m,err=false){let e=document.createElement('div');e.className='toast'+(err?' error':'');e.textContent=m;$('toasts').append(e);setTimeout(()=>e.remove(),4300)}
+function badge(t){return t?`<span class="type ${esc(String(t).toUpperCase())}">${esc(t)}</span>`:''}
+
+let audioContext=null,sfxEnabled=true;
+const typeColor={Fire:'#f37845',Water:'#52a7ef',Grass:'#75c77b',Electric:'#f3c84b',Psychic:'#db71ad',Ice:'#8bd8df',Poison:'#b87bc8',Dragon:'#8b78dd',Dark:'#8c7570',Fighting:'#df705a',Ground:'#cba66d',Flying:'#a8b6e9',Bug:'#b3c764',Rock:'#baa36a',Ghost:'#8a7ab8',Steel:'#b6c3ca',Fairy:'#e5a3c4',Normal:'#c5c6b4'};
+
+function sfx(kind,type){if(!sfxEnabled)return;try{audioContext??=new (window.AudioContext||window.webkitAudioContext)();if(audioContext.state==='suspended')audioContext.resume();let t=audioContext.currentTime,o=audioContext.createOscillator(),g=audioContext.createGain(),isHit=kind==='hit',isFaint=kind==='faint';o.type=isHit?'square':isFaint?'sawtooth':'triangle';o.frequency.setValueAtTime(isHit?180:isFaint?95:type==='Electric'?740:type==='Water'?390:type==='Fire'?210:480,t);o.frequency.exponentialRampToValueAtTime(isHit?65:isFaint?35:210,t+(isFaint?.34:.16));g.gain.setValueAtTime(isHit?.18:.11,t);g.gain.exponentialRampToValueAtTime(.002,t+(isFaint?.34:.16));o.connect(g).connect(audioContext.destination);o.start(t);o.stop(t+(isFaint?.36:.19))}catch{}}
+
 $('soundToggle').onclick=()=>{sfxEnabled=!sfxEnabled;$('soundToggle').textContent=sfxEnabled?'SFX ON':'SFX OFF';$('soundToggle').setAttribute('aria-pressed',String(sfxEnabled));if(sfxEnabled)sfx('attack','Electric')}
-function showPage(p){document.querySelectorAll('.page').forEach(e=>e.classList.toggle('active',e.id===p+'-page'));document.querySelectorAll('.topnav button').forEach(e=>e.classList.toggle('active',e.dataset.page===p));if(p==='rankings')refreshRanks();scrollTo({top:0,behavior:'smooth'})}document.querySelectorAll('.topnav button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+
+function showPage(p){document.querySelectorAll('.page').forEach(e=>e.classList.toggle('active',e.id===p+'-page'));document.querySelectorAll('.topnav button').forEach(e=>e.classList.toggle('active',e.dataset.page===p));if(p==='rankings')refreshRanks();scrollTo({top:0,behavior:'smooth'})}
+document.querySelectorAll('.topnav button').forEach(b=>b.onclick=()=>showPage(b.dataset.page));
+
+// Auth UI Handling
+function renderAuthUI(){
+  let bar=$('authBar'), lab=$('labAuthContainer');
+  if(auth.isLoggedIn()){
+    bar.innerHTML=`
+      <div class="auth-profile">
+        <div class="auth-avatar">${esc(auth.trainerName[0])}</div>
+        <div class="auth-user-info">
+          <span class="auth-user-name">${esc(auth.trainerName)}</span>
+          <span class="auth-user-role">COMMANDER</span>
+        </div>
+        <button class="btn-logout" id="logoutBtn" title="Sign Out">LOGOUT</button>
+      </div>`;
+    $('logoutBtn').onclick=()=>auth.logout();
+
+    if(lab){
+      lab.innerHTML=`
+        <div class="lab-auth-card">
+          <div class="eyebrow">COMMANDER ACTIVE</div>
+          <div class="lab-auth-name">${esc(auth.trainerName)}</div>
+          <p style="color:var(--muted);font:11px 'DM Mono';margin:6px 0 12px">All new teams will automatically link to your profile.</p>
+          <button class="btn small" id="labLogoutBtn">Sign Out / Switch</button>
+        </div>`;
+      $('labLogoutBtn').onclick=()=>auth.logout();
+    }
+  }else{
+    bar.innerHTML=`<button class="btn-auth" id="loginOpenBtn">Sign In</button>`;
+    $('loginOpenBtn').onclick=()=>openAuthModal('login');
+
+    if(lab){
+      lab.innerHTML=`
+        <div class="form-grid">
+          <p style="color:var(--muted);font-size:11px;line-height:1.5">Sign in or register your trainer account to deploy teams directly to the arena.</p>
+          <button class="btn primary" id="labLoginBtn">Sign In / Register</button>
+        </div>`;
+      $('labLoginBtn').onclick=()=>openAuthModal('login');
+    }
+  }
+  syncTrainerOptions();
+}
+
+function openAuthModal(mode='login',alertMsg=''){
+  let m=$('authModal'), a=$('authAlert');
+  m.classList.add('open');
+  setAuthAlert(alertMsg, 'error');
+  switchAuthTab(mode);
+}
+
+function closeAuthModal(){
+  $('authModal').classList.remove('open');
+  $('authAlert').className='auth-alert';
+  $('authAlert').textContent='';
+}
+
+$('authModalClose').onclick=closeAuthModal;
+$('authModal').onclick=e=>{if(e.target===$('authModal'))closeAuthModal()};
+window.addEventListener('keydown',e=>{if(e.key==='Escape')$('authModal').classList.remove('open')});
+
+function switchAuthTab(mode){
+  let isLogin=mode==='login';
+  $('tabLogin').classList.toggle('active',isLogin);
+  $('tabRegister').classList.toggle('active',!isLogin);
+  $('loginForm').style.display=isLogin?'grid':'none';
+  $('registerForm').style.display=!isLogin?'grid':'none';
+  $('authModalTitle').textContent=isLogin?'TRAINER AUTHENTICATION':'COMMISSION NEW TRAINER';
+  $('authAlert').className='auth-alert';
+  $('authAlert').textContent='';
+  if(isLogin)$('loginUsername').focus();else $('regName').focus();
+}
+
+$('tabLogin').onclick=()=>switchAuthTab('login');
+$('tabRegister').onclick=()=>switchAuthTab('register');
+$('switchToRegister').onclick=()=>switchAuthTab('register');
+$('switchToLogin').onclick=()=>switchAuthTab('login');
+
+function setAuthAlert(msg,type='error'){
+  let a=$('authAlert');
+  if(!msg){a.className='auth-alert';a.textContent='';return;}
+  a.className=`auth-alert ${type}`;
+  a.textContent=msg;
+}
+
+// Login Submit
+$('loginForm').onsubmit=async e=>{
+  e.preventDefault();
+  let b=$('loginBtn'), u=$('loginUsername').value.trim(), p=$('loginPassword').value;
+  b.disabled=true;b.textContent='Verifying…';setAuthAlert('');
+  try{
+    let res=await api.login({username:u,password:p});
+    auth.set(res.token,res.trainerName);
+    closeAuthModal();
+    toast(`Welcome back, Commander ${res.trainerName}!`);
+    sfx('attack','Electric');
+    await refreshRanks();
+  }catch(err){
+    setAuthAlert(err.message||'Authentication failed. Verify credentials.','error');
+  }finally{
+    b.disabled=false;b.textContent='Authorize & Enter';
+  }
+};
+
+// Register Submit
+$('registerForm').onsubmit=async e=>{
+  e.preventDefault();
+  let b=$('registerBtn'), n=$('regName').value.trim(), em=$('regEmail').value.trim(), p=$('regPassword').value;
+  b.disabled=true;b.textContent='Enrolling…';setAuthAlert('');
+  try{
+    let res=await api.register({name:n,email:em,password:p});
+    auth.set(res.token,res.trainerName);
+    closeAuthModal();
+    toast(`Trainer license issued for ${res.trainerName}!`);
+    sfx('attack','Electric');
+    await refreshRanks();
+  }catch(err){
+    setAuthAlert(err.message||'Registration failed. Choose another name.','error');
+  }finally{
+    b.disabled=false;b.textContent='Create License & Sign In';
+  }
+};
+
 function fighterCard(s){let accent=typeColor[s.primaryType]||'#eebf48';return `<button class="mon-card ${state.draft.some(x=>x.id===s.id)?'selected':''}" style="--card-accent:${accent}" data-species="${s.id}"><span class="mon-id">#${String(s.id).padStart(4,'0')}</span><span class="mon-name">${esc(s.name)}</span><span class="types">${badge(s.primaryType)}${badge(s.secondaryType)}</span><span class="stats"><span>HP <b>${s.baseHp}</b></span><span>ATK <b>${s.baseAttack}</b></span><span>DEF <b>${s.baseDefense}</b></span><span>SPD <b>${s.baseSpeed}</b></span></span><span class="card-art"><img src="${sprite(s.name)}" alt="${esc(s.name)}" onerror="this.closest('.card-art').style.display='none'"></span></button>`}
 function paintRoster(host,searchId,typeId){let target=$(host);if(!target)return;let q=$(searchId).value.trim().toLowerCase(),t=$(typeId).value,list=state.species.filter(s=>(!q||s.name.toLowerCase().includes(q))&&(!t||s.primaryType===t||s.secondaryType===t));target.innerHTML=list.length?list.map(fighterCard).join(''):'<div class="empty">No fighters match that filter.</div>';target.querySelectorAll('[data-species]').forEach(b=>b.onclick=()=>addSpecies(+b.dataset.species))}
 function renderSpecies(){paintRoster('roster','searchSpecies','typeFilter');paintRoster('builderRoster','builderSearch','builderType')}
+
 function addSpecies(id){let s=state.species.find(x=>x.id===id);if(!s)return;if(state.draft.length>=6)return toast('The lineup is full. Remove a fighter before recruiting another.',true);if(state.draft.some(x=>x.id===id))return toast(`${s.name} is already locked into this lineup.`,true);state.draft.push({...s,level:50});renderSpecies();renderSlots();if(!$('builder-page').classList.contains('active'))showPage('builder')}
+
 function renderSlots(){let coverage=[...new Set(state.draft.flatMap(s=>[s.primaryType,s.secondaryType].filter(Boolean)))];$('teamCounter').textContent=`${state.draft.length} / 6`;$('teamCoverage').innerHTML=coverage.length?`TYPE COVERAGE<br>${coverage.slice(0,5).join(' · ')}${coverage.length>5?' +':''}`:'Recruit up to six fighters<br>Level 1–100 allowed';$('teamSlots').innerHTML=Array.from({length:6},(_,i)=>{let s=state.draft[i];return s?`<div class="slot filled"><span class="slot-num">SLOT ${i+1} · LOCKED</span><button class="slot-remove" title="Remove ${esc(s.name)}" data-remove="${i}">×</button><div class="slot-main"><img src="${sprite(s.name)}" alt="" onerror="this.style.opacity=0"><div class="slot-name">${esc(s.name)}</div><div class="types">${badge(s.primaryType)}${badge(s.secondaryType)}</div><input class="slot-level" data-level="${i}" type="number" min="1" max="100" value="${s.level}" aria-label="${esc(s.name)} level"></div></div>`:`<button type="button" class="slot empty-pick" data-pick="${i}"><span class="slot-num">SLOT ${i+1} · OPEN</span><span class="empty-slot">Recruit fighter</span></button>`}).join('');document.querySelectorAll('[data-remove]').forEach(e=>e.onclick=()=>{state.draft.splice(+e.dataset.remove,1);renderSlots();renderSpecies()});document.querySelectorAll('[data-level]').forEach(e=>e.onchange=()=>{let x=Math.max(1,Math.min(100,+e.value||1));state.draft[+e.dataset.level].level=x;e.value=x});document.querySelectorAll('[data-pick]').forEach(e=>e.onclick=()=>{$('builderSearch').focus();$('builderRoster').scrollIntoView({behavior:'smooth',block:'center'})})}
-function syncTrainerOptions(){let select=$('teamTrainer'),v=select.value;select.innerHTML='<option value="">Select trainer</option>'+state.trainers.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');if([...select.options].some(x=>x.value===v))select.value=v}
-function renderTeams(){$('registryCount').textContent=`${state.teams.length} saved locally`;$('teamRegistry').innerHTML=state.teams.length?state.teams.map(t=>`<article class="team-card"><div><h3>${esc(t.teamName)}</h3><p>${esc(t.trainerName)} · Team #${t.teamId} · ${t.members.length} Pokémon</p><div class="team-mini">${t.members.map(m=>`<img src="${sprite(m.speciesName)}" alt="${esc(m.speciesName)}" onerror="this.style.display='none'">`).join('')}</div></div><button class="btn small" data-arm="${t.teamId}">Use in battle</button></article>`).join(''):'<div class="empty">Deploy a team to make it available in the battle arena. The backend currently has no team-list endpoint, so only teams created in this browser can be selected.</div>';document.querySelectorAll('[data-arm]').forEach(e=>e.onclick=()=>{showPage('battle');$('teamA').value=e.dataset.arm;preview()});renderTeamSelects()}
+
+function syncTrainerOptions(){
+  let select=$('teamTrainer'),v=select.value;
+  select.innerHTML='<option value="">Select trainer</option>'+state.trainers.map(t=>`<option value="${t.id}">${esc(t.name)}</option>`).join('');
+  if(auth.isLoggedIn()){
+    let match=state.trainers.find(t=>t.name.toLowerCase()===auth.trainerName.toLowerCase());
+    if(match){select.value=match.id;return;}
+  }
+  if([...select.options].some(x=>x.value===v))select.value=v;
+}
+
+function renderTeams(){$('registryCount').textContent=`${state.teams.length} saved locally`;$('teamRegistry').innerHTML=state.teams.length?state.teams.map(t=>`<article class="team-card"><div><h3>${esc(t.teamName)}</h3><p>${esc(t.trainerName)} · Team #${t.teamId} · ${t.members.length} Pokémon</p><div class="team-mini">${t.members.map(m=>`<img src="${sprite(m.speciesName)}" alt="${esc(m.speciesName)}" onerror="this.style.display='none'">`).join('')}</div></div><button class="btn small" data-arm="${t.teamId}">Use in battle</button></article>`).join(''):'<div class="empty">Deploy a team to make it available in the battle arena.</div>';document.querySelectorAll('[data-arm]').forEach(e=>e.onclick=()=>{showPage('battle');$('teamA').value=e.dataset.arm;preview()});renderTeamSelects()}
+
 function renderTeamSelects(){let a=$('teamA').value,b=$('teamB').value,o='<option value="">Select a deployed team</option>'+state.teams.map(t=>`<option value="${t.teamId}">${esc(t.teamName)} — ${esc(t.trainerName)}</option>`).join('');$('teamA').innerHTML=o;$('teamB').innerHTML=o;if(state.teams.some(t=>String(t.teamId)===a))$('teamA').value=a;else if(state.teams[0])$('teamA').value=state.teams[0].teamId;if(state.teams.some(t=>String(t.teamId)===b))$('teamB').value=b;else if(state.teams[1])$('teamB').value=state.teams[1].teamId;preview()}
+
 $('searchSpecies').oninput=renderSpecies;$('typeFilter').onchange=renderSpecies;$('builderSearch').oninput=renderSpecies;$('builderType').onchange=renderSpecies;$('teamA').onchange=preview;$('teamB').onchange=preview;
-$('trainerForm').onsubmit=async e=>{e.preventDefault();let m=$('trainerMessage'),b=e.submitter;m.textContent='';b.disabled=true;b.textContent='Registering…';try{let t=await api.createTrainer({name:$('trainerName').value.trim(),email:$('trainerEmail').value.trim()});state.trainers.push(t);syncTrainerOptions();$('trainerForm').reset();toast(`${t.name} is ready for the arena.`);refreshRanks()}catch(x){m.textContent=x.message;toast(x.message,true)}finally{b.disabled=false;b.textContent='Register trainer'}};
-$('deployTeam').onclick=async()=>{let m=$('teamMessage'),b=$('deployTeam'),trainerId=+$('teamTrainer').value,name=$('teamName').value.trim();m.textContent='';if(!trainerId)return m.textContent='Select the trainer who owns this team.';if(name.length<2||name.length>30)return m.textContent='Team name must be 2–30 characters.';if(!state.draft.length)return m.textContent='Select at least one Pokémon from the Pokédex.';b.disabled=true;b.textContent='Deploying…';try{let t=await api.createTeam({trainerId,teamName:name,members:state.draft.map((s,i)=>({speciesId:s.id,level:s.level,slotOrder:i+1}))});state.teams.unshift(t);saveTeams();state.draft=[];$('teamName').value='';renderSlots();renderSpecies();renderTeams();toast(`${t.teamName} is now battle-ready.`)}catch(x){m.textContent=x.message;toast(x.message,true)}finally{b.disabled=false;b.textContent='Deploy team'}};
-function maxHp(m){let s=state.species.find(x=>x.name===m.speciesName);return s?s.baseHp+2*m.level:100}function setCreature(side,m,owner){let ids=side==='A'?['nameA','levelA','ownerA','spriteA','fallbackA','hpA','hpNumA','combatantA']:['nameB','levelB','ownerB','spriteB','fallbackB','hpB','hpNumB','combatantB'],[name,lv,own,img,fall,hp,num,host]=ids.map($);host.classList.remove('fainted','switching');if(!m){name.textContent=`Team ${side}`;lv.textContent='LV —';own.textContent='Choose a team to begin';img.classList.add('hidden');fall.classList.remove('show');hp.style.width='100%';num.textContent='— / —';return}name.textContent=m.speciesName;lv.textContent=`LV ${m.level}`;own.textContent=owner;img.alt=m.speciesName;img.src=sprite(m.speciesName);img.classList.remove('hidden');fall.textContent=m.speciesName[0];fall.classList.remove('show');img.onerror=()=>{img.classList.add('hidden');fall.classList.add('show')};let max=maxHp(m);hp.style.width='100%';hp.style.background='var(--hp)';num.textContent=`${max} / ${max}`}
-function preview(){let a=state.teams.find(t=>String(t.teamId)===$('teamA').value),b=state.teams.find(t=>String(t.teamId)===$('teamB').value);setCreature('A',a?.members?.[0],a?.trainerName);setCreature('B',b?.members?.[0],b?.trainerName);$('resultLabel').textContent=a&&b?'Ready to simulate':'Awaiting challengers'}function reset(){clearTimeout(state.timer);state.playing=false;state.eventIndex=0;$('pausePlayback').textContent='Pause'}
-$('startBattle').onclick=async()=>{let teamAId=+$('teamA').value,teamBId=+$('teamB').value;if(!teamAId||!teamBId)return toast('Choose both teams before starting.',true);if(teamAId===teamBId)return toast('A team cannot battle itself.',true);let b=$('startBattle');b.disabled=true;b.textContent='Simulating…';reset();$('battleLog').innerHTML='<div class="log-item">Contacting the battle engine…</div>';$('feedState').textContent='Simulating';try{let r=await api.simulate({teamAId,teamBId});state.battle={...r,teams:{A:state.teams.find(t=>t.teamId===teamAId),B:state.teams.find(t=>t.teamId===teamBId)}};prepare();toast('Battle result received. Playing replay.');refreshRanks()}catch(x){$('battleLog').innerHTML=`<div class="log-item">${esc(x.message)}</div>`;$('feedState').textContent='Error';toast(x.message,true)}finally{b.disabled=false;b.textContent='Simulate battle'}};
+
+// Deploy Team
+$('deployTeam').onclick=async()=>{
+  let m=$('teamMessage'),b=$('deployTeam'),trainerId=+$('teamTrainer').value,name=$('teamName').value.trim();
+  m.textContent='';
+  if(!auth.isLoggedIn()){
+    openAuthModal('login','You must be signed in to deploy a squad with Spring Security.');
+    return;
+  }
+  if(!trainerId){
+    let match=state.trainers.find(t=>t.name.toLowerCase()===auth.trainerName.toLowerCase());
+    if(match)trainerId=match.id;
+    else return m.textContent='Select the trainer commander for this squad.';
+  }
+  if(name.length<2||name.length>30)return m.textContent='Team name must be 2–30 characters.';
+  if(!state.draft.length)return m.textContent='Select at least one Pokémon from the Pokédex.';
+  b.disabled=true;b.textContent='Deploying…';
+  try{
+    let t=await api.createTeam({trainerId,teamName:name,members:state.draft.map((s,i)=>({speciesId:s.id,level:s.level,slotOrder:i+1}))});
+    state.teams.unshift(t);saveTeams();state.draft=[];$('teamName').value='';
+    renderSlots();renderSpecies();renderTeams();toast(`${t.teamName} is now battle-ready.`);
+    sfx('attack','Electric');
+  }catch(x){
+    m.textContent=x.message;toast(x.message,true);
+  }finally{
+    b.disabled=false;b.textContent='Deploy to arena';
+  }
+};
+
+function maxHp(m){let s=state.species.find(x=>x.name===m.speciesName);return s?s.baseHp+2*m.level:100}
+function setCreature(side,m,owner){let ids=side==='A'?['nameA','levelA','ownerA','spriteA','fallbackA','hpA','hpNumA','combatantA']:['nameB','levelB','ownerB','spriteB','fallbackB','hpB','hpNumB','combatantB'],[name,lv,own,img,fall,hp,num,host]=ids.map($);host.classList.remove('fainted','switching');if(!m){name.textContent=`Team ${side}`;lv.textContent='LV —';own.textContent='Choose a team to begin';img.classList.add('hidden');fall.classList.remove('show');hp.style.width='100%';num.textContent='— / —';return}name.textContent=m.speciesName;lv.textContent=`LV ${m.level}`;own.textContent=owner;img.alt=m.speciesName;img.src=sprite(m.speciesName);img.classList.remove('hidden');fall.textContent=m.speciesName[0];fall.classList.remove('show');img.onerror=()=>{img.classList.add('hidden');fall.classList.add('show')};let max=maxHp(m);hp.style.width='100%';hp.style.background='var(--hp)';num.textContent=`${max} / ${max}`}
+
+function preview(){let a=state.teams.find(t=>String(t.teamId)===$('teamA').value),b=state.teams.find(t=>String(t.teamId)===$('teamB').value);setCreature('A',a?.members?.[0],a?.trainerName);setCreature('B',b?.members?.[0],b?.trainerName);$('resultLabel').textContent=a&&b?'Ready to simulate':'Awaiting challengers'}
+function reset(){clearTimeout(state.timer);state.playing=false;state.eventIndex=0;$('pausePlayback').textContent='Pause'}
+
+// Simulate Battle
+$('startBattle').onclick=async()=>{
+  let teamAId=+$('teamA').value,teamBId=+$('teamB').value;
+  if(!teamAId||!teamBId)return toast('Choose both teams before starting.',true);
+  if(teamAId===teamBId)return toast('A team cannot battle itself.',true);
+  if(!auth.isLoggedIn()){
+    openAuthModal('login','Signed-in license required to invoke battle simulation.');
+    return;
+  }
+  let b=$('startBattle');b.disabled=true;b.textContent='Simulating…';reset();
+  $('battleLog').innerHTML='<div class="log-item">Contacting the battle engine…</div>';
+  $('feedState').textContent='Simulating';
+  try{
+    let r=await api.simulate({teamAId,teamBId});
+    state.battle={...r,teams:{A:state.teams.find(t=>t.teamId===teamAId),B:state.teams.find(t=>t.teamId===teamBId)}};
+    prepare();toast('Battle simulated with Spring Security token!');refreshRanks();
+  }catch(x){
+    $('battleLog').innerHTML=`<div class="log-item">${esc(x.message)}</div>`;
+    $('feedState').textContent='Error';toast(x.message,true);
+  }finally{
+    b.disabled=false;b.textContent='Simulate battle';
+  }
+};
+
 function prepare(){reset();state.playing=true;let t=state.battle.teams;state.runtime={A:{team:t.A,index:0,hp:t.A.members.map(maxHp)},B:{team:t.B,index:0,hp:t.B.members.map(maxHp)}};$('battleLog').innerHTML='';$('roundLabel').textContent='MATCH INITIALIZING';$('resultLabel').textContent='Live replay';preview();$('pausePlayback').disabled=false;$('nextPlayback').disabled=false;$('replayPlayback').disabled=false;advance()}
-function round(line){let m=line.match(/^--- Round (\d+) ---$/);return m&&m[1]}function actor(n){let r=state.runtime;return r.A.team.members[r.A.index]?.speciesName===n?'A':r.B.team.members[r.B.index]?.speciesName===n?'B':null}function log(line,k=''){let e=document.createElement('div');e.className='log-item '+k;e.textContent=line;$('battleLog').append(e);$('battleLog').scrollTop=$('battleLog').scrollHeight}function advance(){if(!state.battle)return;if(state.eventIndex>=state.battle.battleLog.length)return finish();let line=state.battle.battleLog[state.eventIndex++];event(line);if(state.playing)state.timer=setTimeout(advance,780/state.speed)}
-function event(line){let m;if(m=round(line)){$('roundLabel').textContent=`ROUND ${m} · LIVE REPLAY`;log(`TURN ${m}`,'round');return}log(line,/(deals|fainted|wins)/.test(line)?'impact':'');if(m=line.match(/^(.+?) sends out (.+)!$/)){let side=m[1]===state.runtime.A.team.trainerName?'A':'B',r=state.runtime[side];setCreature(side,r.team.members[r.index],r.team.trainerName);$(side==='A'?'combatantA':'combatantB').classList.add('switching');sfx('attack',r.team.members[r.index]?.primaryType);return}if(m=line.match(/^(.+?) \(Speed: \d+\) attacks first\.$/))return attack(actor(m[1]));if(m=line.match(/^(.+?) survived with (\d+)\/(\d+) HP and counter-attacks\.$/)){let s=actor(m[1]);if(s){hp(s,+m[2],+m[3]);attack(s)}return}if(m=line.match(/^(.+?) deals (\d+) damage to (.+)!$/)){let s=actor(m[3]);if(s){let r=state.runtime[s],i=r.index;r.hp[i]=Math.max(0,r.hp[i]- +m[2]);hp(s,r.hp[i],maxHp(r.team.members[i]));hit(s,+m[2])}return}if(line==="It's super effective!"||line==="It's not very effective...")return effect(line.replace("It's ",'').replace('...',''));if(m=line.match(/^It has no effect on (.+)!$/))return effect('Immune');if(m=line.match(/^(.+?) fainted!$/)){let s=actor(m[1]);if(s){$(s==='A'?'combatantA':'combatantB').classList.add('fainted');sfx('faint');state.runtime[s].index++}return}if(m=line.match(/^(.+?) wins the battle in (\d+) rounds!$/))$('resultLabel').textContent=`${m[1]} wins`}
-function activeType(s){return state.runtime?.[s]?.team.members[state.runtime[s].index]?.primaryType}function attack(s){if(!s)return;let e=$(s==='A'?'combatantA':'combatantB'),flash=$('attackFlash'),type=activeType(s);e.classList.remove('attacking');void e.offsetWidth;e.classList.add('attacking');flash.style.setProperty('--fx',typeColor[type]||'#eebf48');flash.className='attack-flash';void flash.offsetWidth;flash.className=`attack-flash from-${s.toLowerCase()}`;sfx('attack',type)}function hit(s,n){let e=$(s==='A'?'combatantA':'combatantB'),d=$(s==='A'?'damageA':'damageB'),arena=document.querySelector('.arena');e.classList.remove('hit');void e.offsetWidth;e.classList.add('hit');arena.classList.remove('impact');void arena.offsetWidth;arena.classList.add('impact');d.textContent=`−${n}`;d.style.left=s==='A'?'26%':'67%';d.style.top=s==='A'?'49%':'54%';d.classList.remove('show');void d.offsetWidth;d.classList.add('show');sfx('hit')}function effect(t){let e=$('effect');e.textContent=t;e.classList.remove('show');void e.offsetWidth;e.classList.add('show')}function hp(s,c,m){let b=$(s==='A'?'hpA':'hpB'),n=$(s==='A'?'hpNumA':'hpNumB'),p=Math.max(0,c/m*100);b.style.width=p+'%';b.style.background=p<=20?'var(--danger)':p<=50?'var(--gold)':'var(--hp)';n.textContent=`${Math.max(0,c)} / ${m}`}function finish(){state.playing=false;$('feedState').textContent='Complete';$('pausePlayback').textContent='Replay complete';$('pausePlayback').disabled=true}$('pausePlayback').onclick=()=>{state.playing=!state.playing;$('pausePlayback').textContent=state.playing?'Pause':'Continue';if(state.playing)advance();else clearTimeout(state.timer)};$('nextPlayback').onclick=()=>{clearTimeout(state.timer);state.playing=false;$('pausePlayback').textContent='Continue';advance()};$('replayPlayback').onclick=prepare;
-async function refreshRanks(){try{let r=await api.leaderboard();state.trainers=r;syncTrainerOptions();let p=$('historyTrainer'),v=p.value;p.innerHTML='<option value="">Choose trainer</option>'+r.map(t=>`<option value="${esc(t.name)}">${esc(t.name)}</option>`).join('');p.value=v;$('leaderboard').innerHTML=r.length?r.map((t,i)=>{let total=t.wins+t.losses,rate=total?Math.round(t.wins/total*100):0;return `<div class="rank-row"><b class="rank-num">${String(i+1).padStart(2,'0')}</b><div><div class="rank-name">${esc(t.name)}</div><div class="rank-email">${esc(t.email)}</div></div><div class="record">${t.wins}W · ${t.losses}L</div><div class="rate">${rate}%</div></div>`}).join(''):'<div class="empty">No trainers have joined the arena yet.</div>'}catch(e){$('leaderboard').innerHTML=`<div class="empty">${esc(e.message)}</div>`;$('connectionStatus').textContent='connection unavailable'}}
-async function history(){let n=$('historyTrainer').value;if(!n)return;let l=$('historyList');l.innerHTML='<div class="loading"><i class="spinner"></i>Loading history</div>';try{let r=await api.history(n);l.innerHTML=r.length?r.map(x=>`<article class="history-item"><strong>${esc(x.winnerTeamName)} defeated ${esc(x.loserTeamName)}</strong><p>${x.roundPlayed} rounds · ${x.battleLog.length} recorded events</p><button class="btn small" data-log="${encodeURIComponent(JSON.stringify(x.battleLog))}">View log</button></article>`).join(''):`<div class="empty">No battles recorded for ${esc(n)} yet.</div>`;document.querySelectorAll('[data-log]').forEach(b=>b.onclick=()=>{let logs=JSON.parse(decodeURIComponent(b.dataset.log));showPage('battle');$('battleLog').innerHTML=logs.map(x=>`<div class="log-item">${esc(x)}</div>`).join('');$('feedState').textContent='Saved log';toast('Showing the authentic stored battle log.')})}catch(e){l.innerHTML=`<div class="empty">${esc(e.message)}</div>`;toast(e.message,true)}}$('loadHistory').onclick=history;$('refreshRanks').onclick=refreshRanks;
-async function boot(){renderSlots();renderTeams();TYPES.forEach(t=>{let option=`<option>${t}</option>`;$('typeFilter').insertAdjacentHTML('beforeend',option);$('builderType').insertAdjacentHTML('beforeend',option)});try{state.species=await api.species();$('connectionStatus').textContent='arena online';renderSpecies();preview()}catch(e){$('roster').innerHTML=`<div class="empty">${esc(e.message)}</div>`;$('builderRoster').innerHTML=`<div class="empty">${esc(e.message)}</div>`;$('connectionStatus').textContent='connection unavailable';toast(e.message,true)}refreshRanks()}if(location.hash)showPage(location.hash.replace('#',''));window.addEventListener('hashchange',()=>showPage(location.hash.replace('#','')));boot();
+function round(line){let m=line.match(/^--- Round (\d+) ---$/);return m&&m[1]}
+function actor(n){let r=state.runtime;return r.A.team.members[r.A.index]?.speciesName===n?'A':r.B.team.members[r.B.index]?.speciesName===n?'B':null}
+function log(line,k=''){let e=document.createElement('div');e.className='log-item '+k;e.textContent=line;$('battleLog').append(e);$('battleLog').scrollTop=$('battleLog').scrollHeight}
+function advance(){if(!state.battle)return;if(state.eventIndex>=state.battle.battleLog.length)return finish();let line=state.battle.battleLog[state.eventIndex++];event(line);if(state.playing)state.timer=setTimeout(advance,780/state.speed)}
+
+function event(line){
+  let m;
+  if(m=round(line)){$('roundLabel').textContent=`ROUND ${m} · LIVE REPLAY`;log(`TURN ${m}`,'round');return}
+  log(line,/(deals|fainted|wins)/.test(line)?'impact':'');
+  if(m=line.match(/^(.+?) sends out (.+)!$/)){let side=m[1]===state.runtime.A.team.trainerName?'A':'B',r=state.runtime[side];setCreature(side,r.team.members[r.index],r.team.trainerName);$(side==='A'?'combatantA':'combatantB').classList.add('switching');sfx('attack',r.team.members[r.index]?.primaryType);return}
+  if(m=line.match(/^(.+?) \(Speed: \d+\) attacks first\.$/))return attack(actor(m[1]));
+  if(m=line.match(/^(.+?) survived with (\d+)\/(\d+) HP and counter-attacks\.$/)){let s=actor(m[1]);if(s){hp(s,+m[2],+m[3]);attack(s)}return}
+  if(m=line.match(/^(.+?) deals (\d+) damage to (.+)!$/)){let s=actor(m[3]);if(s){let r=state.runtime[s],i=r.index;r.hp[i]=Math.max(0,r.hp[i]- +m[2]);hp(s,r.hp[i],maxHp(r.team.members[i]));hit(s,+m[2])}return}
+  if(line==="It's super effective!"||line==="It's not very effective...")return effect(line.replace("It's ",'').replace('...',''));
+  if(m=line.match(/^It has no effect on (.+)!$/))return effect('Immune');
+  if(m=line.match(/^(.+?) fainted!$/)){let s=actor(m[1]);if(s){$(s==='A'?'combatantA':'combatantB').classList.add('fainted');sfx('faint');state.runtime[s].index++}return}
+  if(m=line.match(/^(.+?) wins the battle in (\d+) rounds!$/))$('resultLabel').textContent=`${m[1]} wins`;
+}
+
+function activeType(s){return state.runtime?.[s]?.team.members[state.runtime[s].index]?.primaryType}
+function attack(s){if(!s)return;let e=$(s==='A'?'combatantA':'combatantB'),flash=$('attackFlash'),type=activeType(s);e.classList.remove('attacking');void e.offsetWidth;e.classList.add('attacking');flash.style.setProperty('--fx',typeColor[type]||'#eebf48');flash.className='attack-flash';void flash.offsetWidth;flash.className=`attack-flash from-${s.toLowerCase()}`;sfx('attack',type)}
+function hit(s,n){let e=$(s==='A'?'combatantA':'combatantB'),d=$(s==='A'?'damageA':'damageB'),arena=document.querySelector('.arena');e.classList.remove('hit');void e.offsetWidth;e.classList.add('hit');arena.classList.remove('impact');void arena.offsetWidth;arena.classList.add('impact');d.textContent=`−${n}`;d.style.left=s==='A'?'26%':'67%';d.style.top=s==='A'?'49%':'54%';d.classList.remove('show');void d.offsetWidth;d.classList.add('show');sfx('hit')}
+function effect(t){let e=$('effect');e.textContent=t;e.classList.remove('show');void e.offsetWidth;e.classList.add('show')}
+function hp(s,c,m){let b=$(s==='A'?'hpA':'hpB'),n=$(s==='A'?'hpNumA':'hpNumB'),p=Math.max(0,c/m*100);b.style.width=p+'%';b.style.background=p<=20?'var(--danger)':p<=50?'var(--gold)':'var(--hp)';n.textContent=`${Math.max(0,c)} / ${m}`}
+function finish(){state.playing=false;$('feedState').textContent='Complete';$('pausePlayback').textContent='Replay complete';$('pausePlayback').disabled=true}
+
+$('pausePlayback').onclick=()=>{state.playing=!state.playing;$('pausePlayback').textContent=state.playing?'Pause':'Continue';if(state.playing)advance();else clearTimeout(state.timer)};
+$('nextPlayback').onclick=()=>{clearTimeout(state.timer);state.playing=false;$('pausePlayback').textContent='Continue';advance()};
+$('replayPlayback').onclick=prepare;
+
+async function refreshRanks(){
+  try{
+    let r=await api.leaderboard();
+    state.trainers=r;
+    syncTrainerOptions();
+    let p=$('historyTrainer'),v=p.value;
+    p.innerHTML='<option value="">Choose trainer</option>'+r.map(t=>`<option value="${esc(t.name)}">${esc(t.name)}</option>`).join('');
+    p.value=v;
+    $('leaderboard').innerHTML=r.length?r.map((t,i)=>{
+      let total=t.wins+t.losses,rate=total?Math.round(t.wins/total*100):0;
+      return `<div class="rank-row"><b class="rank-num">${String(i+1).padStart(2,'0')}</b><div><div class="rank-name">${esc(t.name)}</div><div class="rank-email">${esc(t.email)}</div></div><div class="record">${t.wins}W · ${t.losses}L</div><div class="rate">${rate}%</div></div>`;
+    }).join(''):'<div class="empty">No trainers have joined the arena yet.</div>';
+  }catch(e){
+    $('leaderboard').innerHTML=`<div class="empty">${esc(e.message)}</div>`;
+    $('connectionStatus').textContent='connection unavailable';
+  }
+}
+
+async function history(){
+  let n=$('historyTrainer').value;if(!n)return;
+  let l=$('historyList');l.innerHTML='<div class="loading"><i class="spinner"></i>Loading history</div>';
+  try{
+    let r=await api.history(n);
+    l.innerHTML=r.length?r.map(x=>`<article class="history-item"><strong>${esc(x.winnerTeamName)} defeated ${esc(x.loserTeamName)}</strong><p>${x.roundPlayed} rounds · ${x.battleLog.length} recorded events</p><button class="btn small" data-log="${encodeURIComponent(JSON.stringify(x.battleLog))}">View log</button></article>`).join(''):`<div class="empty">No battles recorded for ${esc(n)} yet.</div>`;
+    document.querySelectorAll('[data-log]').forEach(b=>b.onclick=()=>{
+      let logs=JSON.parse(decodeURIComponent(b.dataset.log));showPage('battle');
+      $('battleLog').innerHTML=logs.map(x=>`<div class="log-item">${esc(x)}</div>`).join('');
+      $('feedState').textContent='Saved log';toast('Showing authentic stored battle log.');
+    });
+  }catch(e){
+    l.innerHTML=`<div class="empty">${esc(e.message)}</div>`;toast(e.message,true);
+  }
+}
+
+$('loadHistory').onclick=history;
+$('refreshRanks').onclick=refreshRanks;
+
+async function boot(){
+  renderAuthUI();
+  renderSlots();
+  renderTeams();
+  TYPES.forEach(t=>{let option=`<option>${t}</option>`;$('typeFilter').insertAdjacentHTML('beforeend',option);$('builderType').insertAdjacentHTML('beforeend',option)});
+  try{
+    state.species=await api.species();
+    $('connectionStatus').textContent='arena online';
+    renderSpecies();preview();
+  }catch(e){
+    $('roster').innerHTML=`<div class="empty">${esc(e.message)}</div>`;
+    $('builderRoster').innerHTML=`<div class="empty">${esc(e.message)}</div>`;
+    $('connectionStatus').textContent='connection unavailable';
+    toast(e.message,true);
+  }
+  refreshRanks();
+}
+
+if(location.hash)showPage(location.hash.replace('#',''));
+window.addEventListener('hashchange',()=>showPage(location.hash.replace('#','')));
+boot();
 </script>
 </body></html>
-

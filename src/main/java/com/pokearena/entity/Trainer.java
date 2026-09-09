@@ -12,6 +12,8 @@ public class Trainer {
     private String name ;
     @Column(nullable = false, unique = true)
     private String email;
+    private String password;
+    private String role = "ROLE_TRAINER";
 
     private int wins;
     private int losses;
@@ -20,6 +22,22 @@ public class Trainer {
     }
     public long getId() {
         return id;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
     }
 
     public void setId(long id) {
