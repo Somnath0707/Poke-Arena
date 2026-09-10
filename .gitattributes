@@ -1,2 +1,8 @@
-/mvnw text eol=lf
-*.cmd text eol=crlf
+# Treat frontend static files and raw CSV as vendored assets
+src/main/resources/static/** linguist-vendored
+src/main/resources/Pokemon.csv linguist-vendored
+
+# Exclude HTML, JS, and CSS from repository language calculations
+*.html linguist-detectable=false
+*.js linguist-detectable=false
+*.css linguist-detectable=false
