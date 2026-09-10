@@ -1,10 +1,16 @@
 package com.pokearena.engine;
 
 import com.pokearena.model.PokemonType;
+import com.pokearena.engine.TypeEffectivenessMatrix;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class BattlePokemon {
     private  String name;
     private PokemonType type;
+    private PokemonType secondaryType;
     private int maxHp;
     private int currHp;
     private int attack;
@@ -12,6 +18,20 @@ public class BattlePokemon {
     private int speed;
     private int level;
 
+    TypeEffectivenessMatrix typeEffectivenessMatrix;
+    Random random = new Random();
+
+    public BattlePokemon(TypeEffectivenessMatrix typeEffectivenessMatrix) {
+        this.typeEffectivenessMatrix = typeEffectivenessMatrix;
+    }
+
+    public PokemonType getSecondaryType() {
+        return secondaryType;
+    }
+
+    public void setSecondaryType(PokemonType secondaryType) {
+        this.secondaryType = secondaryType;
+    }
 
     public String getName() {
         return name;
@@ -77,12 +97,22 @@ public class BattlePokemon {
         this.level = level;
     }
 
-    public BattlePokemon(String name, PokemonType type, int baseHp, int baseAttack, int baseDefence, int baseSpeed, int level) {
+    public BattlePokemon(
+            String name,
+            PokemonType type,
+            PokemonType secondaryType,
+            int baseHp,
+            int baseAttack,
+            int baseDefence,
+            int baseSpeed,
+            int level
+    ) {
         this.name = name;
         this.type = type;
+        this.secondaryType = secondaryType;
         this.level = level;
 
-
+        // Automatically scale stats by level & start at 100% health!
         this.maxHp = baseHp + (2 * level);
         this.currHp = this.maxHp;
         this.attack = baseAttack + level;
@@ -97,6 +127,9 @@ public class BattlePokemon {
     public void takeDamage(int damage){
         currHp = Math.max(0 , currHp - damage);
     }
+
+
+
 
 
 

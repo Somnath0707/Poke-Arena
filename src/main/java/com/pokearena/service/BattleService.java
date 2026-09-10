@@ -42,20 +42,26 @@ public class BattleService {
             throw new InvalidBattleException("Cannot battle the same team");
         }
 
+        if (teamA.getTeamMembers().isEmpty() || teamB.getTeamMembers().isEmpty()) {
+            throw new InvalidBattleException("Both teams must have at least one Pokémon to battle.");
+        }
+
         BattleResult result = battleEngine.simulate(
                 teamA.getTrainer().getName(), mapToBattlePokemon(teamA),
                 teamB.getTrainer().getName(), mapToBattlePokemon(teamB)
         );
 
-        if(result.winnerName().equals(teamA.getTrainer().getName())){
+        if ("Draw".equals(result.winnerName())) {
+            // Draw: neither trainer gets a win or a loss
+        } else if (result.winnerName().equals(teamA.getTrainer().getName())) {
             teamA.getTrainer().wins();
             teamB.getTrainer().losses();
+            trainerRepository.saveAll(List.of(teamA.getTrainer(), teamB.getTrainer()));
         } else {
             teamB.getTrainer().wins();
             teamA.getTrainer().losses();
+            trainerRepository.saveAll(List.of(teamA.getTrainer(), teamB.getTrainer()));
         }
-
-        trainerRepository.saveAll(List.of(teamA.getTrainer(), teamB.getTrainer()));
 
         BattleHistory history = new BattleHistory();
         history.setTrainerAName(teamA.getTrainer().getName());
@@ -84,6 +90,7 @@ public class BattleService {
                 .map(m -> new BattlePokemon(
                         m.getSpecies().getName(),
                         m.getSpecies().getPokemonType(),
+                        m.getSpecies().getSecondaryType(),
                         m.getSpecies().getBaseHp(),
                         m.getSpecies().getBaseAttack(),
                         m.getSpecies().getBaseDefense(),

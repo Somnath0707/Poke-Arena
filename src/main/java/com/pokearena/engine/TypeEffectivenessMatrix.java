@@ -6,6 +6,11 @@ import org.springframework.stereotype.Component;
 @Component
 public class TypeEffectivenessMatrix {
 
+    public double getDualMultiplier(PokemonType attackType, PokemonType def1, PokemonType def2) {
+        double m1 = getMultiplier(attackType, def1);
+        double m2 = (def2 != null) ? getMultiplier(attackType, def2) : 1.0;
+        return m1 * m2;
+    }
     public double getMultiplier(
             PokemonType attackType,
             PokemonType defenseType
@@ -298,7 +303,10 @@ public class TypeEffectivenessMatrix {
                 break;
         }
 
+
+
         // Any matchup not explicitly mentioned is neutral.
         return 1.0;
     }
+
 }

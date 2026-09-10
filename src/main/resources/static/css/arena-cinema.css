@@ -1,0 +1,119 @@
+/**
+ * PokeArena — Cinema-Grade Arena & Broadcast CSS
+ * Adds anime impact frames, dynamic speed lines, 3D stadium lighting,
+ * and broadcast-quality letterbox and atmosphere controls.
+ */
+
+/* Anime Impact Frame Inverted Whiteout Overlay */
+.arena-impact-flash {
+  position: absolute;
+  inset: 0;
+  z-index: 60;
+  pointer-events: none;
+  background: #ffffff;
+  opacity: 0;
+  mix-blend-mode: difference;
+}
+.arena-impact-flash.active {
+  animation: impactFlashPulse 0.12s ease-out;
+}
+@keyframes impactFlashPulse {
+  0% { opacity: 0.95; }
+  50% { opacity: 0.6; }
+  100% { opacity: 0; }
+}
+
+/* Manga / Anime Speed Lines Overlay */
+.anime-speed-lines {
+  position: absolute;
+  inset: 0;
+  z-index: 25;
+  pointer-events: none;
+  opacity: 0;
+  background: radial-gradient(circle at 50% 50%, transparent 40%, rgba(255, 255, 255, 0.25) 90%),
+              repeating-conic-gradient(from 0deg, transparent 0deg 8deg, rgba(255, 255, 255, 0.18) 8deg 12deg);
+  transition: opacity 0.15s ease-out;
+}
+.anime-speed-lines.active {
+  opacity: 1;
+}
+
+/* Cinema Widescreen Letterbox Bars */
+.arena.cinematic .cinema-bar-top {
+  transform: translateY(0);
+}
+.arena.cinematic .cinema-bar-bottom {
+  transform: translateY(0);
+}
+.cinema-bar-top, .cinema-bar-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  height: 52px;
+  background: #090b0c;
+  z-index: 45;
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 0 25px rgba(0,0,0,0.8);
+}
+.cinema-bar-top {
+  top: 0;
+  transform: translateY(-100%);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+.cinema-bar-bottom {
+  bottom: 0;
+  transform: translateY(100%);
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+/* Enhanced 3D Ground Shadow */
+.pokemon-shadow {
+  position: absolute;
+  bottom: 12px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 140px;
+  height: 38px;
+  border-radius: 50%;
+  background: radial-gradient(ellipse at center, rgba(0, 0, 0, 0.75) 0%, rgba(0, 0, 0, 0.35) 45%, transparent 75%);
+  filter: blur(4px);
+  pointer-events: none;
+  z-index: 1;
+  transition: transform 0.2s ease, opacity 0.2s ease;
+}
+
+/* Attacking & leaping shadow response */
+.combatant.attacking .pokemon-shadow {
+  transform: translateX(-50%) scale(0.75);
+  opacity: 0.4;
+}
+
+/* Dynamic Stadium Lighting Cones */
+.stadium-light-left, .stadium-light-right {
+  position: absolute;
+  top: -40px;
+  width: 220px;
+  height: 480px;
+  pointer-events: none;
+  opacity: 0.45;
+  mix-blend-mode: screen;
+  transition: background 0.4s ease, opacity 0.3s ease;
+}
+.stadium-light-left {
+  left: 10%;
+  background: radial-gradient(ellipse at 50% 0%, var(--flood-color, rgba(56, 189, 248, 0.4)) 0%, transparent 75%);
+  transform: rotate(-15deg);
+}
+.stadium-light-right {
+  right: 10%;
+  background: radial-gradient(ellipse at 50% 0%, var(--flood-color, rgba(245, 158, 11, 0.4)) 0%, transparent 75%);
+  transform: rotate(15deg);
+}
+
+/* Ultimate Move Cinematic Backdrop Focus */
+.arena-backdrop {
+  transition: opacity 0.15s ease-out;
+}
+.arena.ultimate-move .arena-backdrop {
+  opacity: 0.35;
+}
