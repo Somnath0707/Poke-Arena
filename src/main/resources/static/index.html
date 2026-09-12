@@ -6407,57 +6407,58 @@ function maxHp(m) {
   return base + 2 * lvl;
 }
 
-function renderPartyTray(side, count, activeIdx, isFainted = false) {
+function renderPartyTray(side, count, activeIdx, isFainted = false, hpArray = null) {
   let tray = $(side === 'A' ? 'trayA' : 'trayB');
   if (!tray) return;
-  tray.innerHTML = Array.from({ length: 6 }, (_, i) => {
-    if (i >= count) return '';
+  let totalBalls = Math.max(count || 6, 6);
+  tray.innerHTML = Array.from({ length: totalBalls }, (_, i) => {
     let cls = 'ball-slot';
-    if (i < activeIdx) {
-      cls += ' fainted';
-    } else if (i === activeIdx) {
-      cls += isFainted ? ' fainted' : ' active';
+    let slotHp = (hpArray && hpArray[i] !== undefined) ? hpArray[i] : undefined;
+    if (i === activeIdx) {
+      if (isFainted || (slotHp !== undefined && slotHp <= 0)) {
+        cls += ' fainted';
+      } else {
+        cls += ' active';
+      }
+    } else if (slotHp !== undefined) {
+      cls += slotHp <= 0 ? ' fainted' : ' healthy';
+    } else {
+      cls += i < activeIdx ? ' fainted' : ' healthy';
     }
     return `<div class="${cls}"></div>`;
   }).join('');
 }
 
 /* SET CREATURE & ENFORCE MUTUAL FACING DIRECTIONS */
-function setCreature(side, m, owner, activeIdx = 0, teamCount = 6) {
+function setCreature(side, m, owner, activeIdx = 0, teamCount = 6, currentHp = null) {
   let ids = side === 'A'
     ? ['nameA', 'levelA', 'ownerA', 'spriteA', 'fallbackA', 'hpA', 'hpNumA', 'combatantA', 'podiumA', 'typesA']
     : ['nameB', 'levelB', 'ownerB', 'spriteB', 'fallbackB', 'hpB', 'hpNumB', 'combatantB', 'podiumB', 'typesB'];
-  let [name, lv, own, img, fall, hp, num, host, podium, types] = ids.map($);
+  let [name, lv, own, img, fall, hpBar, num, host, podium, types] = ids.map($);
 
-  host.classList.remove('fainted', 'switching', 'hit', 'attacking', 'clutch-aura', 'evading');
+  host.classList.remove('fainted', 'switching', 'hit', 'attacking', 'clutch-aura', 'evading', 'faint-shock', 'faint-draining', 'faint-collapse', 'hit-stop');
   if (!m) {
     name.textContent = `Squad ${side}`;
     lv.textContent = 'LV —';
     own.textContent = 'Choose a squad to begin';
     img.classList.add('hidden');
     fall.classList.remove('show');
-    hp.style.width = '100%';
+    hpBar.style.width = '100%';
     num.textContent = '— / —';
     types.innerHTML = '';
     return;
   }
 
-  name.textContent = m.speciesName;
-  lv.textContent = `LV ${m.level}`;
-  own.textContent = owner;
-  img.alt = m.speciesName;
+  name.textContent = m.speciesName || m.name || 'Unknown';
+  lv.textContent = `LV ${m.level || 50}`;
+  own.textContent = owner || '';
+  img.alt = m.speciesName || m.name || '';
 
   // SPECIES-AWARE FACING & ORIENTATION LOGIC:
-  // Normal Pokémon front sprites natively face LEFT.
-  // - Side A needs scaleX(-1) to face RIGHT towards opponent.
-  // - Side B needs scaleX(1) to stay facing LEFT towards opponent.
-  // Reverse-facing species (Gyarados, Steelix, etc.) natively face RIGHT:
-  // - Side A needs scaleX(1) to stay facing RIGHT towards opponent.
-  // - Side B needs scaleX(-1) to face LEFT towards opponent.
   let isSideABack = side === 'A' && state.useBackSprite;
   host.classList.toggle('back-mode', isSideABack);
 
-  let isReverse = isReverseFacingSpecies(m.speciesName);
+  let isReverse = isReverseFacingSpecies(m.speciesName || m.name);
   let baseFacing;
   if (isSideABack) {
     baseFacing = 1;
@@ -6474,53 +6475,54 @@ function setCreature(side, m, owner, activeIdx = 0, teamCount = 6) {
 
   let orientWrap = $(side === 'A' ? 'orientWrapA' : 'orientWrapB');
   if (orientWrap) {
+    orientWrap.style.transition = 'none';
     orientWrap.style.transform = `scaleX(${effectiveFacing})`;
   }
 
   // Colossal titan footprint badge
-  let titanCfg = getSpeciesTitanConfig(m.speciesName);
+  let titanCfg = getSpeciesTitanConfig(m.speciesName || m.name);
   host.classList.toggle('colossal', !!titanCfg);
 
-  img.src = getSpriteUrl(m.speciesName, isSideABack);
-  img.className = `pokemon-sprite ${isSideABack ? 'back-sprite' : ''} ${getIdleClass(m.speciesName)}`;
+  img.style.filter = '';
+  img.style.opacity = '1';
+  img.src = getSpriteUrl(m.speciesName || m.name, isSideABack);
+  img.className = `pokemon-sprite ${isSideABack ? 'back-sprite' : ''} ${getIdleClass(m.speciesName || m.name)}`;
   img.classList.remove('hidden');
-  fall.textContent = m.speciesName[0];
+  fall.textContent = (m.speciesName || m.name || '?')[0];
   fall.classList.remove('show');
 
   // Programmatic Sprite Normalization (consistent footprint & grounding)
   let scaleBox = $(side === 'A' ? 'scaleBoxA' : 'scaleBoxB');
   if (scaleBox) {
-    spriteNormalizer.normalize(img, scaleBox, m.speciesName);
+    spriteNormalizer.normalize(img, scaleBox, m.speciesName || m.name);
   }
 
   img.onerror = () => {
+    let pName = m.speciesName || m.name;
     if (isSideABack) {
-      img.src = getFallbackSprite(m.speciesName, true);
+      img.src = getFallbackSprite(pName, true);
       img.onerror = () => {
-        img.src = getSpriteUrl(m.speciesName, false);
+        img.src = getSpriteUrl(pName, false);
         host.classList.remove('back-mode');
         img.onerror = () => {
-          img.src = getArtFallback(m.speciesName);
+          img.src = getArtFallback(pName);
           img.onerror = () => { img.classList.add('hidden'); fall.classList.add('show'); };
         };
       };
     } else {
-      img.src = getFallbackSprite(m.speciesName, false);
+      img.src = getFallbackSprite(pName, false);
       img.onerror = () => {
-        img.src = getArtFallback(m.speciesName);
+        img.src = getArtFallback(pName);
         img.onerror = () => { img.classList.add('hidden'); fall.classList.add('show'); };
       };
     }
   };
 
   let max = maxHp(m);
-  hp.style.width = '100%';
-  hp.className = 'hp-bar-fill';
-  let ghost = $(side === 'A' ? 'hpGhostA' : 'hpGhostB');
-  if (ghost) ghost.style.width = '100%';
-  num.textContent = `${max} / ${max}`;
+  let liveHp = (currentHp !== null && currentHp !== undefined) ? currentHp : max;
+  hp(side, liveHp, max);
 
-  let s = getSpeciesData(m.speciesName);
+  let s = getSpeciesData(m.speciesName || m.name);
   let pType = s.primaryType || m.primaryType || 'Normal';
   let sType = s.secondaryType || m.secondaryType || null;
   types.innerHTML = badge(pType) + badge(sType);
@@ -6534,7 +6536,8 @@ function setCreature(side, m, owner, activeIdx = 0, teamCount = 6) {
     groundRad.style.setProperty('--theme-accent', accent);
   }
 
-  renderPartyTray(side, teamCount, activeIdx);
+  let rHp = state.runtime?.[side]?.hp;
+  renderPartyTray(side, teamCount, activeIdx, false, rHp);
 }
 
 function preview() {
@@ -6599,11 +6602,13 @@ $('startBattle').onclick = async () => {
 
   try {
     let r = await api.simulate({ teamAId: +teamAId, teamBId: +teamBId });
+    let teamObjA = state.teams.find(t => String(t.teamId || t.id) === String(teamAId));
+    let teamObjB = state.teams.find(t => String(t.teamId || t.id) === String(teamBId));
     state.battle = {
       ...r,
       teams: {
-        A: state.teams.find(t => String(t.teamId) === String(teamAId)),
-        B: state.teams.find(t => String(t.teamId) === String(teamBId))
+        A: JSON.parse(JSON.stringify(teamObjA || { teamId: +teamAId, teamName: 'Team A', trainerName: 'Trainer A', members: [] })),
+        B: JSON.parse(JSON.stringify(teamObjB || { teamId: +teamBId, teamName: 'Team B', trainerName: 'Trainer B', members: [] }))
       }
     };
     prepare();
@@ -6631,11 +6636,13 @@ $('startExhibition').onclick = async () => {
 
   try {
     let r = await api.simulate({ teamAId: +teamAId, teamBId: +teamBId });
+    let teamObjA = state.teams.find(t => String(t.teamId || t.id) === String(teamAId));
+    let teamObjB = state.teams.find(t => String(t.teamId || t.id) === String(teamBId));
     state.battle = {
       ...r,
       teams: {
-        A: state.teams.find(t => String(t.teamId) === String(teamAId)),
-        B: state.teams.find(t => String(t.teamId) === String(teamBId))
+        A: JSON.parse(JSON.stringify(teamObjA || { teamId: +teamAId, teamName: 'Team A', trainerName: 'Trainer A', members: [] })),
+        B: JSON.parse(JSON.stringify(teamObjB || { teamId: +teamBId, teamName: 'Team B', trainerName: 'Trainer B', members: [] }))
       }
     };
     prepare();
@@ -6658,11 +6665,134 @@ $('startExhibition').onclick = async () => {
    CINEMA-GRADE BATTLE CHOREOGRAPHY & EVENT DIRECTOR
    ========================================================= */
 
+function normName(n) {
+  if (!n) return '';
+  return String(n).trim().toLowerCase();
+}
+
+function cleanPokemonName(n) {
+  if (!n) return '';
+  return String(n)
+    .toLowerCase()
+    .replace(/\s*\(.*?\)/g, '')
+    .replace(/[^a-z0-9]/g, '')
+    .trim();
+}
+
+function fullSlug(n) {
+  if (!n) return '';
+  return String(n)
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, '')
+    .trim();
+}
+
+function matchesPokemon(mem, rawName) {
+  if (!mem || !rawName) return false;
+  const target = String(rawName).trim().toLowerCase();
+  const sName = String(mem.speciesName || '').trim().toLowerCase();
+  const mName = String(mem.name || '').trim().toLowerCase();
+
+  // 1. Direct string equality
+  if (sName && sName === target) return true;
+  if (mName && mName === target) return true;
+
+  // 2. Full slug equality (e.g. "Ogerpon (Wellspring Mask)" -> "ogerponwellspringmask")
+  const targetSlug = fullSlug(target);
+  if (!targetSlug) return false;
+  if (sName && fullSlug(sName) === targetSlug) return true;
+  if (mName && fullSlug(mName) === targetSlug) return true;
+
+  // 3. Base clean name equality (stripping parentheses, e.g. "Charizard (Mega X)" -> "charizard")
+  const targetClean = cleanPokemonName(target);
+  if (targetClean) {
+    if (sName && cleanPokemonName(sName) === targetClean) return true;
+    if (mName && cleanPokemonName(mName) === targetClean) return true;
+  }
+
+  // 4. Strict substring match only if clean length >= 4
+  if (targetClean.length >= 4) {
+    const sClean = cleanPokemonName(sName);
+    const mClean = cleanPokemonName(mName);
+    if (sClean.length >= 4 && (sClean.includes(targetClean) || targetClean.includes(sClean))) return true;
+    if (mClean.length >= 4 && (mClean.includes(targetClean) || targetClean.includes(mClean))) return true;
+  }
+
+  return false;
+}
+
+function findMemberIndex(team, rawName) {
+  if (!team || !team.members || !rawName) return -1;
+  return team.members.findIndex(mem => matchesPokemon(mem, rawName));
+}
+
+function prepareTeamsFromLogs(rawLogs, teamA, teamB) {
+  if (!teamA) teamA = { trainerName: 'Trainer A', members: [] };
+  if (!teamB) teamB = { trainerName: 'Trainer B', members: [] };
+  if (!teamA.members) teamA.members = [];
+  if (!teamB.members) teamB.members = [];
+
+  teamA.members.forEach((m, idx) => {
+    if (!m.speciesName && m.name) m.speciesName = m.name;
+    if (!m.name && m.speciesName) m.name = m.speciesName;
+    if (!m.level) m.level = 50;
+    if (m.slotOrder === undefined) m.slotOrder = idx + 1;
+  });
+  teamB.members.forEach((m, idx) => {
+    if (!m.speciesName && m.name) m.speciesName = m.name;
+    if (!m.name && m.speciesName) m.name = m.speciesName;
+    if (!m.level) m.level = 50;
+    if (m.slotOrder === undefined) m.slotOrder = idx + 1;
+  });
+
+  if (Array.isArray(rawLogs)) {
+    for (let line of rawLogs) {
+      let introM = line.match(/^Battle has started between (.+?) and Challenger (.+?)!/);
+      if (introM) {
+        if (!teamA.trainerName || teamA.trainerName === 'Trainer A') teamA.trainerName = introM[1].trim();
+        if (!teamB.trainerName || teamB.trainerName === 'Trainer B') teamB.trainerName = introM[2].trim();
+        break;
+      }
+    }
+
+    for (let line of rawLogs) {
+      let swM = line.match(/^(.+?) sends out (.+)!$/);
+      if (swM) {
+        let trainer = swM[1].trim();
+        let pokeName = swM[2].trim();
+        let isA = normName(trainer) === normName(teamA.trainerName) ||
+                  (teamA.trainerName && normName(teamA.trainerName).includes(normName(trainer))) ||
+                  (trainer && normName(trainer).includes(normName(teamA.trainerName)));
+        let targetTeam = isA ? teamA : teamB;
+        let existingIdx = findMemberIndex(targetTeam, pokeName);
+        if (existingIdx === -1) {
+          targetTeam.members.push({
+            id: targetTeam.members.length + 1,
+            speciesName: pokeName,
+            name: pokeName,
+            primaryType: 'Normal',
+            level: 50,
+            slotOrder: targetTeam.members.length + 1
+          });
+        }
+      }
+    }
+  }
+
+  return { teamA, teamB };
+}
+
 function actor(n) {
   let r = state.runtime;
   if (!r) return null;
-  if (r.A.team?.members?.[r.A.index]?.speciesName === n || r.A.team?.members?.[r.A.index]?.name === n) return 'A';
-  if (r.B.team?.members?.[r.B.index]?.speciesName === n || r.B.team?.members?.[r.B.index]?.name === n) return 'B';
+  let memA = r.A.team?.members?.[r.A.index];
+  let memB = r.B.team?.members?.[r.B.index];
+  if (matchesPokemon(memA, n)) return 'A';
+  if (matchesPokemon(memB, n)) return 'B';
+  let idxA = findMemberIndex(r.A.team, n);
+  let idxB = findMemberIndex(r.B.team, n);
+  if (idxA !== -1 && idxB === -1) return 'A';
+  if (idxB !== -1 && idxA === -1) return 'B';
   return null;
 }
 
@@ -6778,7 +6908,7 @@ function hp(side, current, max) {
 
   if (bar) {
     bar.style.width = pct + '%';
-    bar.className = 'hp-bar-fill' + (pct <= 20 ? ' crit' : pct <= 50 ? ' warn' : '');
+    bar.className = 'hp-bar-fill' + (pct <= 10 ? ' crit danger' : pct <= 25 ? ' crit' : pct <= 50 ? ' warn' : '');
   }
   if (ghost) {
     setTimeout(() => {
@@ -6823,24 +6953,27 @@ function parseBattleLog(rawLogs, teamA, teamB) {
 
   function getActiveName(side) {
     const mem = (side === 'A' ? teamA : teamB)?.members?.[activeSlot[side]];
-    return mem?.name || mem?.speciesName || null;
+    return mem?.speciesName || mem?.name || null;
   }
 
   function resolveSideForPokemon(name) {
     if (!name) return 'A';
     // 1. Check current active combatant
-    const nameA = getActiveName('A');
-    const nameB = getActiveName('B');
-    if (name === nameA && name !== nameB) return 'A';
-    if (name === nameB && name !== nameA) return 'B';
+    const memA = teamA?.members?.[activeSlot.A];
+    const memB = teamB?.members?.[activeSlot.B];
+    const matchA = matchesPokemon(memA, name);
+    const matchB = matchesPokemon(memB, name);
+    if (matchA && !matchB) return 'A';
+    if (matchB && !matchA) return 'B';
 
-    // 2. If both match or neither matches active, check team members
-    const inTeamA = teamA?.members?.some(m => m.name === name || m.speciesName === name);
-    const inTeamB = teamB?.members?.some(m => m.name === name || m.speciesName === name);
-    if (inTeamA && !inTeamB) return 'A';
-    if (inTeamB && !inTeamA) return 'B';
+    // 2. Search entire roster of both teams
+    const idxA = findMemberIndex(teamA, name);
+    const idxB = findMemberIndex(teamB, name);
+    if (idxA !== -1 && idxB === -1) return 'A';
+    if (idxB !== -1 && idxA === -1) return 'B';
 
-    if (lastFaintedSide) return lastFaintedSide;
+    // 3. Fallbacks
+    if (lastFaintedSide) return (lastFaintedSide === 'A') ? 'B' : 'A';
     return 'A';
   }
 
@@ -6852,8 +6985,8 @@ function parseBattleLog(rawLogs, teamA, teamB) {
     if (m = line.match(/^Battle has started between (.+?) and Challenger (.+?)!/)) {
       events.push({
         type: 'INTRO',
-        trainerA: m[1],
-        trainerB: m[2],
+        trainerA: m[1].trim(),
+        trainerB: m[2].trim(),
         leadA: teamA?.members?.[0],
         leadB: teamB?.members?.[0],
         raw: [line]
@@ -6874,17 +7007,20 @@ function parseBattleLog(rawLogs, teamA, teamB) {
         roundLogs.push(speedText);
         const firstAtkMatch = speedText.match(/^(.+?)\s*\(/);
         if (firstAtkMatch) {
-          const firstAtkName = firstAtkMatch[1];
-          const nameA = getActiveName('A');
-          const nameB = getActiveName('B');
-          if (firstAtkName === nameA && firstAtkName !== nameB) {
+          const firstAtkName = firstAtkMatch[1].trim();
+          const memA = teamA?.members?.[activeSlot.A];
+          const memB = teamB?.members?.[activeSlot.B];
+          const matchA = matchesPokemon(memA, firstAtkName);
+          const matchB = matchesPokemon(memB, firstAtkName);
+          if (matchA && !matchB) {
             roundFirstAttackerSide = 'A';
-          } else if (firstAtkName === nameB && firstAtkName !== nameA) {
+          } else if (matchB && !matchA) {
             roundFirstAttackerSide = 'B';
           } else {
-            const spdA = teamA?.members?.[activeSlot.A]?.speed || 0;
-            const spdB = teamB?.members?.[activeSlot.B]?.speed || 0;
-            roundFirstAttackerSide = (spdA >= spdB) ? 'A' : 'B';
+            const idxA = findMemberIndex(teamA, firstAtkName);
+            const idxB = findMemberIndex(teamB, firstAtkName);
+            if (idxA !== -1 && idxB === -1) roundFirstAttackerSide = 'A';
+            else if (idxB !== -1 && idxA === -1) roundFirstAttackerSide = 'B';
           }
         }
       }
@@ -6901,42 +7037,54 @@ function parseBattleLog(rawLogs, teamA, teamB) {
 
     // 3. Switch In / Sends Out
     if (m = line.match(/^(.+?) sends out (.+)!$/)) {
-      let trainer = m[1];
-      let pokemon = m[2];
+      let trainer = m[1].trim();
+      let pokemon = m[2].trim();
       let side = null;
 
-      if (!initialSwitchesDone.A) {
+      let normTrainer = normName(trainer);
+      let normA = normName(teamA?.trainerName);
+      let normB = normName(teamB?.trainerName);
+
+      if (normTrainer && normTrainer === normA && normTrainer !== normB) {
         side = 'A';
-        initialSwitchesDone.A = true;
-      } else if (!initialSwitchesDone.B) {
+      } else if (normTrainer && normTrainer === normB && normTrainer !== normA) {
         side = 'B';
-        initialSwitchesDone.B = true;
-      } else if (lastFaintedSide) {
-        side = lastFaintedSide;
-        lastFaintedSide = null;
+      } else if (normTrainer && normA && (normA.includes(normTrainer) || normTrainer.includes(normA)) && !normB.includes(normTrainer)) {
+        side = 'A';
+      } else if (normTrainer && normB && (normB.includes(normTrainer) || normTrainer.includes(normB)) && !normA.includes(normTrainer)) {
+        side = 'B';
       } else {
-        if (teamA?.trainerName !== teamB?.trainerName) {
-          side = (trainer === teamA?.trainerName) ? 'A' : 'B';
-        } else {
-          const idxA = teamA?.members?.findIndex((mem, idx) => idx >= activeSlot.A && (mem.name === pokemon || mem.speciesName === pokemon));
-          const idxB = teamB?.members?.findIndex((mem, idx) => idx >= activeSlot.B && (mem.name === pokemon || mem.speciesName === pokemon));
-          if (idxA !== -1 && idxB === -1) side = 'A';
-          else if (idxB !== -1 && idxA === -1) side = 'B';
-          else side = 'A';
-        }
+        const idxA = findMemberIndex(teamA, pokemon);
+        const idxB = findMemberIndex(teamB, pokemon);
+        if (idxA !== -1 && idxB === -1) side = 'A';
+        else if (idxB !== -1 && idxA === -1) side = 'B';
+        else if (!initialSwitchesDone.A) side = 'A';
+        else if (!initialSwitchesDone.B) side = 'B';
+        else if (lastFaintedSide) side = lastFaintedSide;
+        else side = 'A';
       }
 
+      initialSwitchesDone[side] = true;
+      lastFaintedSide = null;
+
       const team = side === 'A' ? teamA : teamB;
-      let slotIdx = team?.members?.findIndex((mem, idx) => idx >= activeSlot[side] && (mem.name === pokemon || mem.speciesName === pokemon));
-      if (slotIdx === -1 || slotIdx === undefined) {
-        slotIdx = team?.members?.findIndex(mem => mem.name === pokemon || mem.speciesName === pokemon);
-      }
-      if (slotIdx === -1 || slotIdx === undefined) {
-        slotIdx = activeSlot[side];
+      let slotIdx = findMemberIndex(team, pokemon);
+      if (slotIdx === -1) {
+        const newMem = {
+          id: (team.members?.length || 0) + 1,
+          speciesName: pokemon,
+          name: pokemon,
+          primaryType: 'Normal',
+          level: 50,
+          slotOrder: (team.members?.length || 0) + 1
+        };
+        if (!team.members) team.members = [];
+        team.members.push(newMem);
+        slotIdx = team.members.length - 1;
       }
 
       activeSlot[side] = slotIdx;
-      const member = team?.members?.[slotIdx];
+      const member = team.members[slotIdx];
 
       events.push({
         type: 'SWITCH',
@@ -6945,7 +7093,7 @@ function parseBattleLog(rawLogs, teamA, teamB) {
         pokemonName: pokemon,
         member: member,
         slotIndex: slotIdx,
-        totalTeam: team?.members?.length || 6,
+        totalTeam: team.members.length || 6,
         raw: [line]
       });
       continue;
@@ -6953,8 +7101,9 @@ function parseBattleLog(rawLogs, teamA, teamB) {
 
     // 4. Counter-Attack Survivor
     if (m = line.match(/^(.+?) survived with (\d+)\/(\d+) HP and counter-attacks\.$/)) {
-      let pokemon = m[1];
+      let pokemon = m[1].trim();
       let side = resolveSideForPokemon(pokemon);
+      roundFirstAttackerSide = side; // The surviving defender attacks next!
       events.push({
         type: 'COUNTER_CALL',
         side,
@@ -6968,20 +7117,29 @@ function parseBattleLog(rawLogs, teamA, teamB) {
 
     // 5. Attack Execution
     if (m = line.match(/^(.+?) used (.+?)!$/)) {
-      let attackerName = m[1];
-      let moveName = m[2];
+      let attackerName = m[1].trim();
+      let moveName = m[2].trim();
       let attackerSide;
 
-      if (roundFirstAttackerSide !== null) {
+      const memA = teamA?.members?.[activeSlot.A];
+      const memB = teamB?.members?.[activeSlot.B];
+      const matchA = matchesPokemon(memA, attackerName);
+      const matchB = matchesPokemon(memB, attackerName);
+
+      if (matchA && !matchB) {
+        attackerSide = 'A';
+      } else if (matchB && !matchA) {
+        attackerSide = 'B';
+      } else if (roundFirstAttackerSide !== null) {
         attackerSide = roundFirstAttackerSide;
-        roundFirstAttackerSide = (attackerSide === 'A') ? 'B' : 'A';
       } else {
         attackerSide = resolveSideForPokemon(attackerName);
       }
+      roundFirstAttackerSide = null;
 
       let defenderSide = attackerSide === 'A' ? 'B' : 'A';
       let defenderMem = (defenderSide === 'A' ? teamA : teamB)?.members?.[activeSlot[defenderSide]];
-      let defenderName = defenderMem?.name || defenderMem?.speciesName || (defenderSide === 'A' ? 'Team A' : 'Team B');
+      let defenderName = defenderMem?.speciesName || defenderMem?.name || (defenderSide === 'A' ? 'Team A' : 'Team B');
       let move = getMoveDetails(moveName);
       let missed = false;
       let effectiveness = 'NORMAL';
@@ -7021,7 +7179,7 @@ function parseBattleLog(rawLogs, teamA, teamB) {
         } else if (next.match(/^(.+?) deals (\d+) damage to (.+)!$/)) {
           let dmgM = next.match(/^(.+?) deals (\d+) damage to (.+)!$/);
           damage = parseInt(dmgM[2], 10);
-          defenderName = dmgM[3];
+          defenderName = dmgM[3].trim();
           attackLogs.push(next);
           i++;
           break;
@@ -7048,7 +7206,7 @@ function parseBattleLog(rawLogs, teamA, teamB) {
       continue;
     }
 
-    // 5b. Authentic Backend Attack Execution (when backend emits damage directly without "used" line)
+    // 5b. Authentic Backend Attack Execution fallback
     if (line.match(/^It's (super effective!|not very effective\.\.\.)/) || line.match(/^It ha[ds] no effect on/) || line.match(/^(.+?) deals (\d+) damage to (.+)!$/)) {
       let pendingEffectiveness = 'NORMAL';
       let pendingMultiplier = 1.0;
@@ -7085,43 +7243,14 @@ function parseBattleLog(rawLogs, teamA, teamB) {
 
       let dmgM = damageLine.match(/^(.+?) deals (\d+) damage to (.+)!$/);
       if (dmgM) {
-        let attackerName = dmgM[1];
+        let attackerName = dmgM[1].trim();
         let damage = parseInt(dmgM[2], 10);
-        let defenderName = dmgM[3];
-        let attackerSide;
-
-        if (roundFirstAttackerSide !== null) {
-          attackerSide = roundFirstAttackerSide;
-          roundFirstAttackerSide = (attackerSide === 'A') ? 'B' : 'A';
-        } else {
-          attackerSide = resolveSideForPokemon(attackerName);
-        }
-
+        let defenderName = dmgM[3].trim();
+        let attackerSide = resolveSideForPokemon(attackerName);
         let defenderSide = attackerSide === 'A' ? 'B' : 'A';
         let attackerMem = (attackerSide === 'A' ? teamA : teamB)?.members?.[activeSlot[attackerSide]];
-        let pokemonType = attackerMem?.type || attackerMem?.pokemonType || 'Normal';
-        let signatureMoves = {
-          'Fire': ['Flamethrower', 'Fire Blast'],
-          'Water': ['Hydro Pump', 'Surf'],
-          'Grass': ['Leaf Blade', 'Energy Ball'],
-          'Electric': ['Thunderbolt', 'Thunder'],
-          'Ice': ['Ice Beam', 'Blizzard'],
-          'Fighting': ['Close Combat', 'Cross Chop'],
-          'Poison': ['Sludge Bomb', 'Gunk Shot'],
-          'Ground': ['Earthquake', 'Earth Power'],
-          'Flying': ['Brave Bird', 'Air Slash'],
-          'Psychic': ['Psychic', 'Psybeam'],
-          'Bug': ['X-Scissor', 'Bug Buzz'],
-          'Rock': ['Stone Edge', 'Rock Slide'],
-          'Ghost': ['Shadow Ball', 'Shadow Claw'],
-          'Dragon': ['Dragon Claw', 'Outrage'],
-          'Dark': ['Crunch', 'Dark Pulse'],
-          'Steel': ['Flash Cannon', 'Iron Head'],
-          'Fairy': ['Moonblast', 'Dazzling Gleam'],
-          'Normal': ['Body Slam', 'Slash']
-        };
-        let moveList = signatureMoves[pokemonType] || ['Tackle', 'Body Slam'];
-        let moveName = (pendingEffectiveness === 'SUPER' || damage >= 60) ? (moveList[1] || moveList[0]) : moveList[0];
+        let pokemonType = attackerMem?.type || attackerMem?.primaryType || attackerMem?.pokemonType || 'Normal';
+        let moveName = (pendingEffectiveness === 'SUPER' || damage >= 60) ? 'Body Slam' : 'Tackle';
         let move = getMoveDetails(moveName);
 
         events.push({
@@ -7145,14 +7274,31 @@ function parseBattleLog(rawLogs, teamA, teamB) {
 
     // 6. Faint
     if (m = line.match(/^(.+?) fainted!$/)) {
-      let faintedName = m[1];
-      let side = lastAttackDefenderSide || resolveSideForPokemon(faintedName);
+      let faintedName = m[1].trim();
+      let side;
+      const idxA = findMemberIndex(teamA, faintedName);
+      const idxB = findMemberIndex(teamB, faintedName);
+
+      if (idxA !== -1 && idxB === -1) {
+        side = 'A';
+      } else if (idxB !== -1 && idxA === -1) {
+        side = 'B';
+      } else {
+        side = lastAttackDefenderSide || resolveSideForPokemon(faintedName);
+      }
+
       lastFaintedSide = side;
+      roundFirstAttackerSide = null; // Turn ends on faint!
+
+      let team = side === 'A' ? teamA : teamB;
+      let slotIndex = findMemberIndex(team, faintedName);
+      if (slotIndex === -1) slotIndex = activeSlot[side];
+      activeSlot[side] = slotIndex;
 
       events.push({
         type: 'FAINT',
         side,
-        slotIndex: activeSlot[side],
+        slotIndex: slotIndex,
         pokemonName: faintedName,
         raw: [line]
       });
@@ -7163,8 +7309,8 @@ function parseBattleLog(rawLogs, teamA, teamB) {
     if (m = line.match(/^(.+?) wins the battle in (\d+) rounds!$/)) {
       events.push({
         type: 'VICTORY',
-        winnerName: m[1],
-        loserName: m[1] === teamA?.trainerName ? teamB?.trainerName : teamA?.trainerName,
+        winnerName: m[1].trim(),
+        loserName: m[1].trim() === teamA?.trainerName ? teamB?.trainerName : teamA?.trainerName,
         rounds: parseInt(m[2], 10),
         isDraw: false,
         raw: [line]
@@ -7239,6 +7385,9 @@ class BattleDirector {
 
   load(battle, teams) {
     this.stop();
+    let prepared = prepareTeamsFromLogs(battle.battleLog, teams.A, teams.B);
+    teams.A = prepared.teamA;
+    teams.B = prepared.teamB;
     this.events = parseBattleLog(battle.battleLog, teams.A, teams.B);
     this.index = 0;
     this.introSkipped = false;
@@ -7375,25 +7524,39 @@ class BattleDirector {
             let targetX = side === 'A' ? 140 : 480;
             gsap.fromTo(ballActor, 
               { opacity: 1, scale: 0.8, x: startX, y: 180 },
-              { x: targetX, y: 120, duration: 0.26, ease: "power1.out",
+              { x: targetX, y: 120, duration: 0.22, ease: "power1.out",
                 onComplete: () => {
-                  gsap.to(ballActor, { y: 220, scale: 1.1, duration: 0.16, ease: "power2.in",
+                  gsap.to(ballActor, { y: 220, scale: 1.1, duration: 0.14, ease: "power2.in",
                     onComplete: () => { ballActor.style.opacity = '0'; }
                   });
                 }
               }
             );
-            await this.sleep(220);
+            await this.sleep(180);
           } else {
-            await this.sleep(120);
+            await this.sleep(100);
+          }
+
+          if (spriteAnimator) spriteAnimator.reset(side);
+          host.classList.remove('fainted', 'hit', 'attacking', 'evading', 'clutch-aura', 'faint-shock', 'faint-draining', 'faint-collapse', 'hit-stop');
+
+          if (r.hp[r.index] === undefined || r.hp[r.index] <= 0) {
+            r.hp[r.index] = maxHp(member);
           }
 
           // Beat 3: Set creature, remove faint states, add switch-burst animation
-          setCreature(side, member, r.team.trainerName, r.index, r.team.members.length);
-          if (spriteAnimator) spriteAnimator.reset(side);
-          host.classList.remove('fainted', 'hit', 'attacking', 'evading', 'clutch-aura', 'faint-shock', 'faint-draining', 'faint-collapse');
+          setCreature(side, member, r.team.trainerName, r.index, r.team.members.length, r.hp[r.index]);
+          renderPartyTray(side, r.team.members.length, r.index, false, r.hp);
+
           host.classList.add('switching', 'switch-burst');
           setTimeout(() => host.classList.remove('switching', 'switch-burst'), 550);
+
+          // Energy flash & particle bloom on switch-in
+          let spawnCenter = vfx.getCenter(side);
+          let spawnColor = TYPE_COLORS[member.type || member.primaryType || 'Normal'] || '#38bdf8';
+          if (vfx.pokeVFX && vfx.pokeVFX.particles) {
+            vfx.pokeVFX.particles.explode(spawnCenter.x, spawnCenter.y, spawnColor, 26, 7);
+          }
 
           let dex = getDexId(member.speciesName);
           audio.playCry(dex);
@@ -7401,7 +7564,7 @@ class BattleDirector {
 
         logCommentary('switch', `<span class="badge-switch">↻ SWAP</span> <b>${esc(event.trainerName)}</b> sends out <b>${esc(event.pokemonName)}</b>!`);
         this.updateVignette();
-        await this.sleep(380);
+        await this.sleep(350);
         break;
       }
 
@@ -7434,6 +7597,35 @@ class BattleDirector {
         state.lastAttackerSide = event.attackerSide;
         let atkHost = $(event.attackerSide === 'A' ? 'combatantA' : 'combatantB');
         let defHost = $(event.defenderSide === 'A' ? 'combatantA' : 'combatantB');
+
+        // Self-healing attacker check: verify attacker is deployed on podium
+        let rAtk = state.runtime?.[event.attackerSide];
+        if (rAtk && event.attackerName) {
+          let matchedAtkIdx = findMemberIndex(rAtk.team, event.attackerName);
+          if (matchedAtkIdx !== -1 && rAtk.index !== matchedAtkIdx) {
+            rAtk.index = matchedAtkIdx;
+            let atkMem = rAtk.team.members[matchedAtkIdx];
+            if (rAtk.hp[matchedAtkIdx] === undefined || rAtk.hp[matchedAtkIdx] <= 0) rAtk.hp[matchedAtkIdx] = maxHp(atkMem);
+            setCreature(event.attackerSide, atkMem, rAtk.team.trainerName, matchedAtkIdx, rAtk.team.members.length, rAtk.hp[matchedAtkIdx]);
+          }
+        }
+        if (spriteAnimator) spriteAnimator.reset(event.attackerSide);
+        atkHost.classList.remove('fainted', 'hit', 'clutch-aura', 'evading', 'faint-shock', 'faint-draining', 'faint-collapse', 'hit-stop');
+
+        // Self-healing defender check: verify defender is deployed on podium
+        let rDef = state.runtime?.[event.defenderSide];
+        if (rDef && event.defenderName) {
+          let matchedDefIdx = findMemberIndex(rDef.team, event.defenderName);
+          if (matchedDefIdx !== -1 && rDef.index !== matchedDefIdx) {
+            rDef.index = matchedDefIdx;
+            let defMem = rDef.team.members[matchedDefIdx];
+            if (rDef.hp[matchedDefIdx] === undefined) rDef.hp[matchedDefIdx] = maxHp(defMem);
+            setCreature(event.defenderSide, defMem, rDef.team.trainerName, matchedDefIdx, rDef.team.members.length, rDef.hp[matchedDefIdx]);
+          }
+        }
+        if (spriteAnimator) spriteAnimator.reset(event.defenderSide);
+        defHost.classList.remove('fainted', 'hit', 'clutch-aura', 'evading', 'faint-shock', 'faint-draining', 'faint-collapse', 'hit-stop');
+
         let move = event.move || getMoveDetails(event.moveName);
 
         // Fetch MoveVisualRegistry configuration
@@ -7628,6 +7820,7 @@ class BattleDirector {
             rDef.hp[i] = Math.max(0, (rDef.hp[i] || 0) - event.damage);
             let max = maxHp(defMem);
             hp(event.defenderSide, rDef.hp[i], max);
+            renderPartyTray(event.defenderSide, rDef.team.members.length, rDef.index, rDef.hp[i] <= 0, rDef.hp);
 
             this.damageStats[event.attackerSide] = (this.damageStats[event.attackerSide] || 0) + event.damage;
             this.damageStats.mvpCandidates[event.attackerName] = (this.damageStats.mvpCandidates[event.attackerName] || 0) + event.damage;
@@ -7673,7 +7866,7 @@ class BattleDirector {
         if (soundDirector) soundDirector.playCrowdCheer();
 
         if (spriteAnimator) {
-          spriteAnimator.playFaint(side);
+          await spriteAnimator.playFaint(side);
         } else {
           // Beat 1: Shock freeze (100ms)
           if (host) {
@@ -7705,7 +7898,7 @@ class BattleDirector {
           let mem = r.team.members[slot];
           let max = maxHp(mem);
           hp(side, 0, max);
-          renderPartyTray(side, r.team.members.length, slot, true);
+          renderPartyTray(side, r.team.members.length, slot, true, r.hp);
         }
 
         camera.dramaticPull();

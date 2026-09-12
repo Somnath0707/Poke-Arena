@@ -5,11 +5,13 @@ import com.pokearena.model.dto.BattleSimulationRequest;
 import com.pokearena.repository.BattleHistoryRepository;
 import com.pokearena.service.BattleService;
 import jakarta.validation.Valid;
+import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
+@Tag(name = "Battle Simulation", description = "Simulate turn-based battles and view history")
 @RestController
 @RequestMapping("/api/battles")
 public class BattleController {
