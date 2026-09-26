@@ -1,14 +1,126 @@
-# PokeArena
+<div align="center">
 
-A full-stack, turn-based Pokémon combat simulation platform and roster laboratory built with Java 25, Spring Boot, Spring Data JPA, and PostgreSQL.
+<img src="docs/images/readme-banner.png" alt="PokéArena Championship Platform" width="100%" />
 
-PokeArena models full-scale team combat across all 9 generations (1,215 species). Instead of acting as a passive database viewer, the backend executes a standalone, state-driven combat engine featuring an 18-type compound effectiveness matrix, dynamic elemental move arsenals, speed-priority turn resolution, stat scaling by level, tactical counter-switching heuristics, and round-by-round combat logging for visual replay.
+<br/>
+
+[![Java](https://img.shields.io/badge/Java-25-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
+[![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-boot)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
+[![Spring Security](https://img.shields.io/badge/Security-JWT_Stateless-green?style=for-the-badge&logo=springsecurity&logoColor=white)](https://spring.io/projects/spring-security)
+[![Generations](https://img.shields.io/badge/Pokédex-1%2C215_Species-E3350D?style=for-the-badge&logo=pokemon&logoColor=white)](#-domain-model--schema)
+[![Audio](https://img.shields.io/badge/Web_Audio-Synthesizer-purple?style=for-the-badge&logo=soundcharts&logoColor=white)](#1-cinema-battle-arena)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
+
+<br/>
+
+<p align="center">
+  <strong>High-Octane Turn-Based Combat Simulation Engine & Competitive Roster Laboratory</strong>
+  <br/>
+  Featuring an 18×18 compound dual-typing matrix, dynamic elemental move arsenals, speed-priority turn resolution, stat scaling by level, tactical counter-switching heuristics, and round-by-round visual replay.
+</p>
+
+[Explore Features](#-feature-showcase) • [Architecture](#-architecture--data-flow) • [Combat Mechanics](#-combat-engine--simulation-mechanics) • [Domain Model](#-domain-model--schema) • [REST API](#-rest-api-reference) • [Quick Start](#-quick-start--local-development)
+
+</div>
 
 ---
 
-## How It Works
+## ⚡ Overview
 
-PokeArena is split into two integrated tiers: a **Deterministic In-Memory Simulation Engine** running inside Spring Boot and an **Event-Driven Browser Client** that translates the server's combat journal into animated sprite battles with synthesized sound effects.
+**PokéArena** models competitive Pokémon team combat across all **9 generations (1,215 catalogued species)**. Rather than acting as a static database browser, the backend runs a standalone, deterministic simulation state machine that resolves complete 6v6 squad engagements in milliseconds, streaming an immutable event ledger to an anime-inspired browser client for cinematic replay with procedural audio synthesis.
+
+```
+                    ┌────────────────────────────────────────────────────────┐
+                    │                      POKÉARENA                         │
+                    │   Turn-Based Championship Combat Simulation Engine     │
+                    └───────────────────────────┬────────────────────────────┘
+                                                │
+                 ┌──────────────────────────────┴──────────────────────────────┐
+                 ▼                                                             ▼
+   ┌───────────────────────────┐                                 ┌───────────────────────────┐
+   │     BACKEND ENGINE        │                                 │     FRONTEND CLIENT       │
+   │  • Deterministic State    │   REST API + Bearer JWT Token   │  • Anime Battle Arena     │
+   │  • 18×18 Dual Typing      │ ◄─────────────────────────────► │  • 1,215-Species Pokédex  │
+   │  • Level 1-100 Scaling    │       Event Log Replay JSON     │  • Team Lab / Roster Forge│
+   │  • Tactical Counter AI    │                                 │  • Web Audio Synthesizer  │
+   └───────────────────────────┘                                 └───────────────────────────┘
+```
+
+---
+
+## 🖼️ Feature Showcase
+
+<div align="center">
+  <img src="docs/images/feature-grid.png" alt="PokéArena System Modules" width="100%" />
+</div>
+
+<br/>
+
+### 1. Cinema Battle Arena
+* **Spectator Simulation Mode**: Two teams enter; one emerges victorious. Zero manual button mashing—watch server-calculated battles unfold in authentic anime style.
+* **Cinematic Presentation**: Showdown animated sprites, elemental screen flashes, GSAP lunges, impact shockwaves, screen shakes, dynamic camera angles, and floating critical damage text.
+* **Web Audio Procedural Sound Director**: Built-in sound synthesizer generating whooshes, sub-bass impacts, electric crackles, and crowd cheers directly in the browser—zero external audio file dependencies.
+* **Intelligent Bench Cycling**: When an active combatant faints, a dramatic faint collapse triggers, followed by a Pokéball throw summon bringing the next squad member into battle.
+
+<details>
+<summary><b>🔍 Expand Arena Screenshot Preview</b></summary>
+<br/>
+
+![PokéArena Battle Field](docs/screenshots/arena.png)
+
+</details>
+
+---
+
+### 2. Team Lab & Roster Forge
+* **Custom Squad Assembly**: Draft 1 to 6 Pokémon into personalized battle squads.
+* **Full Level Calibration**: Calibrate individual member levels anywhere from $1$ to $100$, with all baseline stats (HP, Attack, Defense, Speed) automatically scaling via canonical formulas.
+* **Elemental Coverage Meter**: Visual feedback showing elemental type distribution across your active roster.
+* **Seamless Deployment**: Deploy custom teams directly into exhibition matches or competitive rankings.
+
+<details>
+<summary><b>🔍 Expand Team Lab Screenshot Preview</b></summary>
+<br/>
+
+![Team Lab Squad Builder](docs/screenshots/team-builder.png)
+
+</details>
+
+---
+
+### 3. 9-Gen Pokédex (1,215 Species)
+* **Complete Canonical Roster**: Spans Generation 1 through Generation 9, including regional forms and Mega Evolutions.
+* **Stat Radar & Typings**: Inspect base HP, Attack, Defense, Speed, Primary Type, and Secondary Type at a glance.
+* **Instant Client-Side Filtering**: Filter by name or elemental type in real time with zero latency.
+
+<details>
+<summary><b>🔍 Expand Pokédex Screenshot Preview</b></summary>
+<br/>
+
+![Pokédex Browser](docs/screenshots/pokedex.png)
+
+</details>
+
+---
+
+### 4. Competitive Leaderboard & Match Replay
+* **Trainer Standings**: Live competitive rankings tracking total wins, losses, and win percentages.
+* **Full Match Journal Replay**: Every battle persists a complete round-by-round event log (`@ElementCollection`) enabling full visual replay at any point in time.
+
+<details>
+<summary><b>🔍 Expand Leaderboard Screenshot Preview</b></summary>
+<br/>
+
+![Leaderboard and Match History](docs/screenshots/rankings.png)
+
+</details>
+
+---
+
+## 🏛️ Architecture & Data Flow
+
+PokéArena follows clean architectural separation between an in-memory simulation engine, transactional service orchestration, stateless security filters, and browser-driven event replay.
 
 ```mermaid
 graph TD
@@ -86,159 +198,246 @@ graph TD
 
 ---
 
-## Engineering Deep Dives
+## ⚙️ Combat Engine & Simulation Mechanics
 
-### 1. Speed-Priority Turn Resolution & Combat State Machine
-In turn-based game simulations, race conditions between simultaneous actions must be resolved deterministically. The combat loop in `BattleEngine` calculates a dynamic initiative check every round by comparing effective speed stats (base speed scaled by level).
+### 1. Speed-Priority Turn Resolution & State Machine
+Simultaneous combat actions are resolved deterministically each round:
+1. **Initiative Calculation**: Effective speed stats ($\text{Base Speed} \times \text{Level Scale}$) are evaluated.
+2. **First Striker Phase**: Faster combatant launches its chosen move. Accuracy check is evaluated. Damage is calculated and applied to the defender.
+3. **Faint & Forfeit Check**: If defender HP drops to $0$, it faints immediately and **forfeits** its counter-attack for that round.
+4. **Counter-Attack Phase**: If the defender survives, it executes its move against the initial attacker.
+5. **Round Closure**: Logs are written to an append-only event stream (`List<String> battleLog`).
 
-The faster combatant attacks first. If the defender's HP reaches zero, it faints immediately and forfeits its attack for that turn, triggering a bench switch-in. If the defender survives, it executes a counter-attack. The entire sequence is recorded into an append-only event stream (`List<String> battleLog`) that captures:
-- Attack announcements and target names
-- Hit vs. miss accuracy outcomes
-- Super-effective ($4\times, 2\times$), resisted ($0.5\times, 0.25\times$), and immune ($0\times$) multipliers
-- Damage dealt and remaining HP fractions
-- Faint events, bench switch-ins, and match outcome
+```
+                ┌────────────────────────────────┐
+                │        ROUND INITIATION        │
+                │ Compare Effective Speed Stats  │
+                └───────────────┬────────────────┘
+                                │
+                                ▼
+                ┌────────────────────────────────┐
+                │       FAST POKÉMON ATTACKS     │
+                │ Accuracy Check → Apply Damage  │
+                └───────────────┬────────────────┘
+                                │
+                   Defender HP ≤ 0?
+                   ├── YES ──► [Defender Faints] ──► [Bench Switch-In]
+                   │
+                   └── NO  ──► ┌────────────────────────────────┐
+                               │       SLOW POKÉMON ATTACKS     │
+                               │ Accuracy Check → Apply Damage  │
+                               └───────────────┬────────────────┘
+                                               │
+                                  Attacker HP ≤ 0?
+                                  ├── YES ──► [Attacker Faints] ──► [Bench Switch-In]
+                                  └── NO  ──► [Advance to Next Round]
+```
 
-$$\text{Damage} = \left(\left(\frac{2 \times \text{Level}}{5} + 2\right) \times \text{Power} \times \frac{\text{Attack}}{\text{Defense}} \times \frac{1}{50} + 2\right) \times \text{STAB} \times \text{Multiplier}$$
+### 2. Canonical Combat Math
+Damage calculations follow the official Gen V/VI/VII competitive mechanics formula with compound modifiers:
 
-### 2. The Dynamic Elemental Arsenal (Beyond 4-Move Limits)
-In the original Game Boy titles, Pokémon were constrained to 4 moves due to 8-bit memory constraints and controller layouts. In an automated server simulation, that restriction produces repetitive, predictable combat loops.
+$$\text{Damage} = \left(\left(\frac{2 \times \text{Level}}{5} + 2\right) \times \text{Power} \times \frac{\text{Attack}}{\text{Defense}} \times \frac{1}{50} + 2\right) \times \text{STAB} \times \text{Multiplier} \times \text{Random}(0.85, 1.00)$$
 
-PokeArena implements a **Dynamic Elemental Arsenal**:
-- Each Pokémon has real-time command over all moves matching its **Primary Type**, its **Secondary Type**, and universal **Normal combat moves**.
-- Moves are codified in a type-safe enum (`Move`) across 4 tactical tiers:
-  - `LIGHT`: 40 Power, 100% Accuracy (e.g., *Quick Attack*, *Ember*, *Water Gun*)
-  - `STANDARD`: 75–90 Power, 100% Accuracy (e.g., *Flamethrower*, *Surf*, *Thunderbolt*)
-  - `HEAVY`: 100–120 Power, 75–85% Accuracy (e.g., *Fire Blast*, *Hydro Pump*, *Stone Edge*)
-  - `ULTIMATE`: 130–150 Power, 60–80% Accuracy (e.g., *Hyper Beam*, *Solar Beam*, *Overheat*)
-- **Desperation / Clutch Mechanic**: When a Pokémon's current HP drops below 25%, probability weighting shifts dynamically toward `HEAVY` (25%) and `ULTIMATE` (15%) moves, simulating an anime-style last stand.
-- **STAB (Same-Type Attack Bonus)**: Grants an authentic $1.5\times$ damage multiplier when an attack matches the Pokémon's innate typing.
+* **STAB (Same-Type Attack Bonus)**: Grants a $1.5\times$ damage boost when an attack matches the Pokémon's innate type.
+* **Accuracy Roll**: Roll $R \in [1, 100]$. If $R \le \text{Accuracy}$, the attack lands; otherwise, a miss event is logged.
 
-### 3. Compound Dual-Typing Effectiveness Matrix
-Many Pokémon possess two distinct elemental types (e.g., Charizard is Fire/Flying, Swampert is Water/Ground). A single-type chart fails to capture real combat dynamics.
+### 3. Dynamic Elemental Arsenals (Beyond 4-Move Limits)
+To eliminate repetitive 4-move loops in automated simulation, Pokémon command all moves matching their **Primary Type**, **Secondary Type**, and universal **Normal moves**, categorized into 4 tactical tiers:
 
-`TypeEffectivenessMatrix` models all 18 elemental types and computes compound defense multipliers:
-$$\text{Multiplier} = \text{Chart}[\text{MoveType}][\text{DefType}_1] \times \text{Chart}[\text{MoveType}][\text{DefType}_2]$$
+| Tier | Power | Accuracy | Representative Moves | Selection Weight (Healthy) | Selection Weight (Clutch $<25\%$ HP) |
+| :--- | :---: | :---: | :--- | :---: | :---: |
+| **LIGHT** | 40 | 100% | *Quick Attack, Ember, Water Gun, Vine Whip* | 35% | 15% |
+| **STANDARD** | 75–90 | 100% | *Flamethrower, Surf, Thunderbolt, Energy Ball* | 40% | 45% |
+| **HEAVY** | 100–120 | 75–85% | *Fire Blast, Hydro Pump, Stone Edge, Blizzard* | 20% | 25% |
+| **ULTIMATE** | 130–150 | 60–80% | *Hyper Beam, Solar Beam, Overheat, Focus Blast* | 5% | 15% |
 
-This yields authentic compound outcomes:
-- **4.0× Double Super-Effective**: Rock vs. Charizard (Fire / Flying)
-- **2.0× Super-Effective**: Water vs. Fire
-- **1.0× Neutral**: Water vs. Grass / Flying (2.0× and 0.5× cancel out)
-- **0.5× Resisted**: Fire vs. Water
-- **0.25× Double Resisted**: Grass vs. Charizard (Fire / Flying)
-- **0.0× Full Immunity**: Electric vs. Swampert (Water / Ground)
+> **Clutch / Desperation Mechanic**: When HP drops below $25\%$, the probability distribution shifts toward Heavy and Ultimate moves for dramatic, clutch anime comebacks.
 
-### 4. Tactical Counter-Switching Heuristic (Trainer AI)
-Standard student projects cycle through team arrays sequentially ($0 \to 1 \to 2$). When a Grass-type faints against a Fire-type, a sequential loop blindly sends out the next Grass-type to be knocked out.
+### 4. 18×18 Compound Dual-Typing Effectiveness Matrix
+Dual-typed Pokémon (e.g., Charizard: Fire/Flying; Swampert: Water/Ground) resolve defensive multipliers multiplicatively across both types:
 
-`BattleEngine.selectNextPokemon` implements a **Hierarchical Decision Heuristic**:
-1. **Surviving Pool**: Filters the team down to combatants where `!isFainted()`.
-2. **75% Tactical Counter Search**: Iterates through surviving bench candidates and evaluates whether their primary or secondary type deals $\ge 2.0\times$ super-effective damage against the opponent currently on the field. If multiple counters exist, one is selected at random.
-3. **25% Wildcard / Fallback**: If no counter exists on the bench or if the 25% wildcard branch is triggered, a random surviving teammate is deployed.
+$$\text{Multiplier} = \text{Matrix}[\text{MoveType}][\text{DefType}_1] \times \text{Matrix}[\text{MoveType}][\text{DefType}_2]$$
 
-### 5. High-Throughput Startup Ingestion & Form Deduplication
-On boot, `DataSeeder` streams `Pokemon.csv` into memory:
-- Handles composite name resolution: Alternate forms, Mega Evolutions, and regional variants (e.g., `Charizard (Mega Charizard X)`, `Raichu (Alolan Form)`) are dynamically parsed to prevent database unique constraint collisions.
-- Idempotent execution: Verifies table count before execution to prevent duplicate seeding across service restarts.
+* **$4.0\times$ Double Super-Effective**: Rock vs. Charizard (Fire / Flying)
+* **$2.0\times$ Super-Effective**: Water vs. Fire
+* **$1.0\times$ Neutral**: Water vs. Grass / Flying ($2.0\times \times 0.5\times = 1.0\times$)
+* **$0.5\times$ Resisted**: Fire vs. Water
+* **$0.25\times$ Double Resisted**: Grass vs. Charizard (Fire / Flying)
+* **$0.0\times$ Complete Immunity**: Electric vs. Swampert (Water / Ground)
 
-### 6. Stateless Authentication & Boundary Isolation
-- **Stateless JWT**: Authentication requests to `/api/auth/login` and `/api/auth/register` return signed HMAC-SHA256 tokens.
-- **Security Filter Chain**: `JwtAuthenticationFilter` intercepts incoming requests, extracts the Bearer token, validates signature and expiration, and populates the `SecurityContextHolder`.
-- Passwords stored as one-way salt-hashed hashes via `BCryptPasswordEncoder`.
-
----
-
-## Screenshots
-
-### 1. Battle Arena
-Live visual replay of the backend simulation log with animated Showdown sprites, dynamic HP gauges, damage popups, move banners, and Web Audio API synthesized sound effects.
-
-![PokeArena Battle Field](docs/screenshots/arena.png)
-
-### 2. Pokédex Browser (1,215 Species)
-Catalogue of all 9 generations loaded on startup from CSV, featuring base stats, dual typing, and instant client-side filtering.
-
-![Pokédex Browser](docs/screenshots/pokedex.png)
-
-### 3. Team Lab (Roster Forge)
-Draft 1 to 6 Pokémon into custom squads, calibrate levels from 1 to 100, inspect elemental coverage, and deploy directly to the arena.
-
-![Team Lab Squad Builder](docs/screenshots/team-builder.png)
-
-### 4. Competitive Leaderboard & Replay History
-Live competitive standings tracking win rates and storing complete round-by-round match histories for instant replay.
-
-![Leaderboard and Match History](docs/screenshots/rankings.png)
+### 5. Tactical Counter-Switching Heuristic (Trainer AI)
+When a Pokémon faints, the trainer AI does not blindly cycle $0 \to 1 \to 2$. It executes a tactical heuristic:
+1. **Surviving Pool**: Filters roster to active candidates where `!isFainted()`.
+2. **75% Tactical Counter Search**: Scans bench candidates to identify any teammate whose primary or secondary type deals $\ge 2.0\times$ super-effective damage against the opponent currently on the field.
+3. **25% Wildcard / Fallback**: If no direct counter exists, or if the 25% wildcard branch triggers, a surviving teammate is chosen at random.
 
 ---
 
-## Domain Model & Schema
+## 🗄️ Domain Model & Schema
 
 The relational schema is normalized across 5 core entities:
-- **`Trainer`**: Profile, BCrypt password hash, wins, losses, role.
-- **`PokemonSpecies`**: Canonical species dictionary (1,215 records) with base HP, Attack, Defense, Speed, and primary/secondary elemental types.
-- **`Team`**: Squad entity associated with a `Trainer` ($N:1$). Cascades all lifecycle operations to its members with orphan removal.
-- **`TeamMember`**: Roster slot entity ($N:1$ with `Team`, $N:1$ with `PokemonSpecies`) holding custom level ($1\text{–}100$) and slot order ($1\text{–}6$).
-- **`BattleHistory`**: Match outcomes, timestamps, round count, and serialized match log events (`@ElementCollection`).
+
+```mermaid
+erDiagram
+    TRAINER ||--o{ TEAM : owns
+    TRAINER ||--o{ BATTLE_HISTORY : records
+    TEAM ||--|{ TEAM_MEMBER : contains
+    POKEMON_SPECIES ||--o{ TEAM_MEMBER : references
+
+    TRAINER {
+        bigint id PK
+        varchar username UK
+        varchar email UK
+        varchar password_hash
+        int wins
+        int losses
+        varchar role
+    }
+
+    POKEMON_SPECIES {
+        bigint id PK
+        varchar name UK
+        varchar type1
+        varchar type2
+        int base_hp
+        int base_attack
+        int base_defense
+        int base_speed
+        varchar sprite_url
+    }
+
+    TEAM {
+        bigint id PK
+        varchar team_name
+        bigint trainer_id FK
+    }
+
+    TEAM_MEMBER {
+        bigint id PK
+        bigint team_id FK
+        bigint species_id FK
+        int level
+        int slot_order
+    }
+
+    BATTLE_HISTORY {
+        bigint id PK
+        varchar trainer1_name
+        varchar trainer2_name
+        varchar winner_name
+        int total_rounds
+        timestamp battle_date
+    }
+```
 
 ---
 
-## REST API Reference
+## 📡 REST API Reference
 
 ### Public Endpoints
-| Method | Path | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/auth/register` | Register a new trainer account with name, email, and password |
-| `POST` | `/api/auth/login` | Authenticate credentials and receive a stateless JWT Bearer token |
-| `GET` | `/api/species` | Retrieve all 1,215 catalogued Pokémon species with base stats |
-| `GET` | `/api/leaderboard` | Retrieve top 10 trainers ranked by total wins |
+| Method | Endpoint | Request Body | Description |
+| :--- | :--- | :--- | :--- |
+| `POST` | `/api/auth/register` | `{"username","email","password"}` | Register a new trainer profile |
+| `POST` | `/api/auth/login` | `{"username","password"}` | Authenticate and obtain JWT Bearer token |
+| `GET` | `/api/species` | *None* | List all 1,215 species with base stats & typings |
+| `GET` | `/api/leaderboard` | *None* | Retrieve top trainers ranked by wins |
 
-### Protected Endpoints (Requires `Authorization: Bearer <token>`)
-| Method | Path | Description |
-| :--- | :--- | :--- |
-| `POST` | `/api/teams` | Create a squad with 1 to 6 Pokémon members, levels, and slot orders |
-| `POST` | `/api/battles/simulate` | Execute a battle simulation between two team IDs |
-| `GET` | `/api/battles/history/{trainerName}` | Retrieve historical match logs for a specific trainer |
+### Protected Endpoints (`Authorization: Bearer <token>`)
+| Method | Endpoint | Request Body | Description |
+| :--- | :--- | :--- | :--- |
+| `GET` | `/api/trainers/me` | *None* | Fetch current authenticated trainer profile |
+| `GET` | `/api/teams/my` | *None* | List all teams owned by authenticated trainer |
+| `POST` | `/api/teams` | `{"teamName","members":[{"speciesId","level"}]}` | Create a custom team of 1–6 members |
+| `POST` | `/api/battles/simulate` | `{"teamAId": 1, "teamBId": 2}` | Execute full combat simulation |
+| `GET` | `/api/battles/history/{trainer}`| *None* | Fetch full combat logs & match history |
 
 ---
 
-## Local Development Setup
+## 🚀 Quick Start & Local Development
 
 ### Prerequisites
-- **Java 21 or Java 25**
-- **PostgreSQL 14+** running locally on port `5432`
-- Maven wrapper included (`./mvnw`)
+* **Java 21 or Java 25** (`java -version`)
+* **PostgreSQL 14+** running on `localhost:5432`
+* Maven wrapper (`./mvnw`) included in repository
 
-### 1. Database Setup
-Create a PostgreSQL database named `pokearena`:
+### Option A: One-Command PostgreSQL (Docker)
+```bash
+docker run --name pokearena-db -e POSTGRES_DB=pokearena -e POSTGRES_USER=postgres -e POSTGRES_PASSWORD=postgres -p 5432:5432 -d postgres:16-alpine
+```
 
+### Option B: Local PostgreSQL Setup
 ```sql
 CREATE DATABASE pokearena;
 ```
 
-### 2. Configure Credentials
-Update `src/main/resources/application.properties` to match your local PostgreSQL configuration:
-
+Configure credentials in `src/main/resources/application.properties`:
 ```properties
 server.port=8088
 
 spring.datasource.url=jdbc:postgresql://localhost:5432/pokearena
 spring.datasource.username=postgres
-spring.datasource.password=your_password
+spring.datasource.password=postgres
 spring.datasource.driver-class-name=org.postgresql.Driver
 
 spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
 spring.jpa.hibernate.ddl-auto=update
+
+# Optional: Custom JWT Secret (has secure fallback default)
+jwt.secret=YourUltraSecure64ByteMinimumSecretStringGoesHere1234567890!@#$%
 ```
 
-### 3. Build & Run
+### Launch Application
 ```bash
 ./mvnw spring-boot:run
 ```
 
-Once started, navigate to `http://localhost:8088` in your browser.
+Once started, open [http://localhost:8088](http://localhost:8088) in your browser.
+
+### Run Test Suite
+```bash
+./mvnw test
+```
+> All unit and integration tests execute against an in-memory/isolated context. Expect **19/19 tests passing**.
 
 ---
 
-## License
+## 📂 Project Structure
 
-This project is open-source under the [MIT License](LICENSE). Pokémon and Pokémon character names are trademarks of Nintendo, Creatures Inc., and GAME FREAK Inc.
+```
+poke-arena/
+├── src/
+│   ├── main/
+│   │   ├── java/com/pokearena/
+│   │   │   ├── config/              # SecurityConfig, JwtAuthFilter, JwtUtils
+│   │   │   ├── controller/          # Auth, Battle, Leaderboard, Species, Team
+│   │   │   ├── dto/                 # Request & Response payload records
+│   │   │   ├── engine/              # BattleEngine, BattlePokemon, Move, TypeEffectivenessMatrix
+│   │   │   ├── entity/              # Trainer, PokemonSpecies, Team, TeamMember, BattleHistory
+│   │   │   ├── repository/          # Spring Data JPA repositories
+│   │   │   ├── service/             # Business logic & simulation orchestrators
+│   │   │   └── util/                # DataSeeder (CSV parser & form deduplication)
+│   │   └── resources/
+│   │       ├── Pokemon.csv          # 1,215 canonical species dataset
+│   │       ├── application.properties
+│   │       └── static/              # Single-Page Application
+│   │           ├── index.html       # Arena viewport, Team Lab, Pokédex UI
+│   │           ├── images/logo.png  # Official PokéArena mascot clamshell logo
+│   │           └── js/audio/        # Web Audio API procedural sound director
+│   └── test/                        # Simulation, entity, and controller tests
+├── docs/
+│   ├── images/
+│   │   ├── readme-banner.png        # Official 1200x400 obsidian hero banner
+│   │   ├── feature-grid.png         # Official 1400x940 2x2 browser window mockup grid
+│   │   └── logo.png                 # Master vector-quality mascot logo
+│   └── screenshots/                 # High-res UI module captures
+├── pom.xml
+└── README.md
+```
+
+---
+
+## 📜 License & Disclaimers
+
+This project is licensed under the [MIT License](LICENSE).
+
+*Pokémon and Pokémon character names are trademarks of Nintendo, Creatures Inc., and GAME FREAK Inc.* PokéArena is an educational, non-commercial open-source simulation engine and fan homage.

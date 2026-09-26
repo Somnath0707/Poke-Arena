@@ -4,6 +4,7 @@ import com.pokearena.entity.PokemonSpecies;
 import com.pokearena.entity.Team;
 import com.pokearena.entity.TeamMember;
 import com.pokearena.entity.Trainer;
+import com.pokearena.exception.ForbiddenAccessException;
 import com.pokearena.exception.ResourceNotFoundException;
 import com.pokearena.model.dto.CreateTeamMemberRequest;
 import com.pokearena.model.dto.CreateTeamRequest;
@@ -29,10 +30,13 @@ public class TeamService {
     }
 
 
-    public TeamResponseDto createTeam(CreateTeamRequest request) {
-        Trainer trainer = trainerRepository.findById(request.trainerId()).
-                orElseThrow(() -> new ResourceNotFoundException("Trainer not found with id: " + request.trainerId()));
+    public TeamResponseDto createTeam(CreateTeamRequest request , String currentUser) {
+        Trainer trainer = trainerRepository.findById(request.trainerId())
+                        .orElseThrow(() -> new ResourceNotFoundException("Trainer not found with id: " + request.trainerId()));
 
+        if(!trainer.getName().equals(currentUser)){
+            throw new ForbiddenAccessException("You cannot create team from another trainer");
+        }
         Team team = new Team();
         team.setTrainer(trainer);
         team.setName(request.teamName());

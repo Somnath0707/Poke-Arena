@@ -8,6 +8,8 @@ import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RestController;
@@ -22,8 +24,10 @@ public class TeamController {
     }
 
     @PostMapping("/api/teams")
-    public ResponseEntity<TeamResponseDto> createTeam(@Valid @RequestBody CreateTeamRequest request) {
-        TeamResponseDto response = teamService.createTeam(request);
+    public ResponseEntity<TeamResponseDto> createTeam(@Valid @RequestBody CreateTeamRequest request,
+                                                      @AuthenticationPrincipal UserDetails userDetails) {
+        String username = userDetails != null ? userDetails.getUsername() : null;
+        TeamResponseDto response = teamService.createTeam(request, username);
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
 }

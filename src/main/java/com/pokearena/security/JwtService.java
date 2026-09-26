@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.io.Decoder;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -14,8 +15,16 @@ import java.util.Date;
 public class JwtService {
 
     // should be 32 character  long
-    private static final String SECRET = "mySuperSecretPokeArenaKey1234567890!@#$";
-    private static final long EXPIRATION_TIME = 1000 * 60 * 60 * 24; // 24 hours
+    private  final String SECRET;
+    private  final long EXPIRATION_TIME;
+
+    public JwtService(
+            @Value("${jwt.secret}") String SECRET,
+            @Value("${jwt.expiration}") long EXPIRATION_TIME
+    ) {
+        this.SECRET = SECRET;
+        this.EXPIRATION_TIME = EXPIRATION_TIME;
+    }
 
     private SecretKey getSigningKey(){
         return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));

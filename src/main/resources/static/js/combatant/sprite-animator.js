@@ -68,9 +68,15 @@ window.PokeSpriteAnimator = class PokeSpriteAnimator {
    */
   reactHit(side, isHeavy = false, durationMs = 320) {
     const host = document.getElementById(side === 'A' ? 'combatantA' : 'combatantB');
-    if (!host) return;
+    if (!host || host.classList.contains('fainted')) return;
     const wrap = host.querySelector('.sprite-orient-wrap');
     if (!wrap) return;
+
+    if (!this.activeTimers) this.activeTimers = new Map();
+    const existing = this.activeTimers.get(side) || [];
+    existing.forEach(clearTimeout);
+    const timers = [];
+    this.activeTimers.set(side, timers);
 
     const flip = this.getFacing(side);
     const recoilX = side === 'A' ? -35 : 35;
@@ -86,16 +92,20 @@ window.PokeSpriteAnimator = class PokeSpriteAnimator {
     wrap.style.transform = `scaleX(${flip}) translate(${recoilX * 0.4}px, ${recoilY * 0.5}px) scale(0.88, 1.15)`;
 
     // 2. Knockback recoil slide
-    setTimeout(() => {
+    const t2 = setTimeout(() => {
+      if (!host || host.classList.contains('fainted')) return;
       wrap.style.transition = `transform ${dur2}ms cubic-bezier(0.18, 0.89, 0.32, 1.28)`;
       wrap.style.transform = `scaleX(${flip}) translate(${recoilX}px, ${recoilY}px) rotate(${side === 'A' ? -5 : 5}deg)`;
     }, dur1);
+    timers.push(t2);
 
     // 3. Regain stance
-    setTimeout(() => {
+    const t3 = setTimeout(() => {
+      if (!host || host.classList.contains('fainted')) return;
       wrap.style.transition = `transform ${dur3}ms ease-out`;
       wrap.style.transform = `scaleX(${flip}) translate(0px, 0px) scale(1, 1)`;
     }, delayRegain);
+    timers.push(t3);
   }
 
   /**
@@ -103,7 +113,7 @@ window.PokeSpriteAnimator = class PokeSpriteAnimator {
    */
   rebound(side, durationMs = 200) {
     const host = document.getElementById(side === 'A' ? 'combatantA' : 'combatantB');
-    if (!host) return;
+    if (!host || host.classList.contains('fainted')) return;
     const wrap = host.querySelector('.sprite-orient-wrap');
     if (!wrap) return;
 
@@ -119,6 +129,13 @@ window.PokeSpriteAnimator = class PokeSpriteAnimator {
   async playFaint(side, durationMs = 600) {
     const host = document.getElementById(side === 'A' ? 'combatantA' : 'combatantB');
     if (!host) return;
+
+    // Immediately cancel any pending recoil or stance timers
+    if (this.activeTimers && this.activeTimers.has(side)) {
+      this.activeTimers.get(side).forEach(clearTimeout);
+      this.activeTimers.set(side, []);
+    }
+
     const wrap = host.querySelector('.sprite-orient-wrap');
     const sprite = host.querySelector('.pokemon-sprite');
     if (!wrap || !sprite) return;
@@ -149,9 +166,16 @@ window.PokeSpriteAnimator = class PokeSpriteAnimator {
   /**
    * Resets all transforms
    */
-  reset(side) {
+  reset(side, force = false) {
     const host = document.getElementById(side === 'A' ? 'combatantA' : 'combatantB');
     if (!host) return;
+
+    if (this.activeTimers && this.activeTimers.has(side)) {
+      this.activeTimers.get(side).forEach(clearTimeout);
+      this.activeTimers.set(side, []);
+    }
+
+    if (!force && host.classList.contains('fainted')) return;
     const wrap = host.querySelector('.sprite-orient-wrap');
     const sprite = host.querySelector('.pokemon-sprite');
     const flip = this.getFacing(side);

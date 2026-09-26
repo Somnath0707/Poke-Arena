@@ -7,6 +7,8 @@ import com.pokearena.service.BattleService;
 import jakarta.validation.Valid;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -24,18 +26,25 @@ public class BattleController {
 
     @PostMapping("/simulate")
     public ResponseEntity<BattleResultResponseDto> simulate(
-            @Valid @RequestBody BattleSimulationRequest request
-    ) {
+            @Valid @RequestBody BattleSimulationRequest request,
+            @AuthenticationPrincipal UserDetails userDetails
+            ) {
+        String username = userDetails != null ? userDetails.getUsername() : null;
         BattleResultResponseDto response =
-                battleService.simulateBattle(request);
+                battleService.simulateBattle(request, username);
 
         return ResponseEntity.ok(response);
     }
 
 
-    @GetMapping("/history/{trainerName}")
-    public ResponseEntity<List<BattleResultResponseDto>> getBattleHistory(@PathVariable String trainerName){
-        List<BattleResultResponseDto> history = battleService.getHistoryForTrainer(trainerName);
+    @GetMapping({"/history/{trainerName}", "/history"})
+    public ResponseEntity<List<BattleResultResponseDto>> getBattleHistory(
+            @PathVariable(required = false) String trainerName,
+            @AuthenticationPrincipal UserDetails userDetails) {
+        String targetTrainer = (trainerName != null && !trainerName.isBlank())
+                ? trainerName
+                : (userDetails != null ? userDetails.getUsername() : null);
+        List<BattleResultResponseDto> history = battleService.getHistoryForTrainer(targetTrainer);
         return ResponseEntity.ok(history);
     }
 }

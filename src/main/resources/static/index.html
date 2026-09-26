@@ -4,6 +4,8 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>PokeArena — Championship Battle Simulator</title>
+  <link rel="icon" type="image/png" href="images/logo.png">
+  <link rel="apple-touch-icon" href="images/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:ital,wght@0,500;0,600;0,700;0,800;0,900;1,700;1,800&family=DM+Mono:wght@400;500;600&family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet">
@@ -83,6 +85,7 @@
     .brand {
       display: flex;
       align-items: center;
+      gap: 12px;
       color: var(--ink);
       text-decoration: none;
       font: 900 30px "Barlow Condensed";
@@ -90,24 +93,22 @@
       text-transform: uppercase;
     }
 
-    .mark {
-      position: relative;
-      width: 30px;
-      height: 30px;
-      margin-right: 12px;
-      border: 3px solid #fff;
+    .brand-logo {
+      width: 44px;
+      height: 44px;
       border-radius: 50%;
-      background: linear-gradient(var(--red) 0 45%, #fff 45% 55%, #181a1b 55%);
-      box-shadow: 0 0 14px rgba(244, 63, 94, 0.4);
+      object-fit: cover;
+      border: 2px solid rgba(255, 255, 255, 0.25);
+      box-shadow: 0 0 16px rgba(244, 63, 94, 0.4);
+      transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.25s ease;
     }
-    .mark::after {
-      content: "";
-      position: absolute;
-      inset: 8px;
-      border: 2.5px solid #181a1b;
-      border-radius: 50%;
-      background: #fff;
-      box-shadow: 0 0 6px #fff;
+    .brand:hover .brand-logo {
+      transform: scale(1.1) rotate(-6deg);
+      box-shadow: 0 0 24px rgba(244, 63, 94, 0.7);
+    }
+
+    .mark {
+      display: none;
     }
 
     .topnav { display: flex; gap: 4px; }
@@ -988,11 +989,22 @@
     /* Faint Dissolve */
     .combatant.fainted .pokemon-sprite {
       animation: faintCollapse .6s forwards;
+      pointer-events: none;
     }
     @keyframes faintCollapse {
       0% { filter: brightness(1.8) drop-shadow(0 0 15px #ef4444); opacity: 1; }
-      50% { opacity: 0.6; filter: grayscale(1) brightness(0.5); transform: translateY(20px) rotate(12deg) scale(0.9); }
-      100% { opacity: 0.15; filter: grayscale(1) brightness(0.2); transform: translateY(40px) rotate(18deg) scale(0.75); }
+      50% { opacity: 0.5; filter: grayscale(1) brightness(0.5); transform: translateY(20px) rotate(12deg) scale(0.9); }
+      100% { opacity: 0.08; filter: grayscale(1) brightness(0.2); transform: translateY(40px) rotate(18deg) scale(0.75); }
+    }
+
+    /* Pokéball Recall Beam */
+    .combatant.recalling .pokemon-sprite {
+      animation: ballRecall .32s cubic-bezier(.4, 0, 1, 1) forwards;
+    }
+    @keyframes ballRecall {
+      0% { filter: brightness(2.5) drop-shadow(0 0 25px #ef4444); transform: scale(1); opacity: 1; }
+      50% { filter: brightness(4) drop-shadow(0 0 35px #f43f5e); transform: scale(0.6) translateY(-25px); opacity: 0.7; }
+      100% { filter: brightness(6) drop-shadow(0 0 50px #ffffff); transform: scale(0.05) translateY(-65px); opacity: 0; }
     }
 
     /* Switch In */
@@ -1008,9 +1020,9 @@
     /* Pokéball Entrance Throw Animation */
     .pokeball-throw-actor {
       position: absolute;
-      width: 40px;
-      height: 40px;
-      z-index: 10;
+      width: 44px;
+      height: 44px;
+      z-index: 45;
       pointer-events: none;
       display: none;
     }
@@ -1018,7 +1030,7 @@
       width: 100%;
       height: 100%;
       object-fit: contain;
-      filter: drop-shadow(0 6px 10px rgba(0,0,0,0.8));
+      filter: drop-shadow(0 8px 12px rgba(0,0,0,0.85)) drop-shadow(0 0 10px rgba(239, 68, 68, 0.7));
     }
 
     /* 💥 MAGNITUDE-SCALED FLOATING DAMAGE NUMBERS */
@@ -2719,7 +2731,7 @@
 <body>
 <main class="shell">
   <header class="topbar">
-    <a class="brand" href="#battle" aria-label="PokeArena home"><i class="mark"></i>POKEARENA</a>
+    <a class="brand" href="#battle" aria-label="PokeArena home"><img class="brand-logo" src="images/logo.png" alt="PokéArena Logo">POKEARENA</a>
     <nav class="topnav" aria-label="Main navigation">
       <button class="active" data-page="battle">Battle</button>
       <button data-page="pokedex">Pokédex</button>
@@ -3222,7 +3234,7 @@
 <div class="modal-overlay" id="authModal" role="dialog" aria-modal="true">
   <div class="auth-modal">
     <div class="auth-modal-header">
-      <div class="auth-modal-title" id="authModalTitle">TRAINER AUTHENTICATION</div>
+      <div class="auth-modal-title" id="authModalTitle"><img src="images/logo.png" style="width:28px;height:28px;border-radius:50%;vertical-align:middle;margin-right:10px;box-shadow:0 0 10px rgba(244,63,94,0.4);" alt="Logo">TRAINER AUTHENTICATION</div>
       <button class="auth-modal-close" id="authModalClose" aria-label="Close modal">×</button>
     </div>
     <div class="auth-nav">
@@ -3757,36 +3769,18 @@ function getSpeciesData(speciesName) {
   };
 }
 
-/* SPRITE RESOLUTION WITH AUTHENTIC SHOWDOWN & POKEAPI ANIMATED SPRITES */
+/*
+ * SPRITE RESOLUTION
+ *
+ * Pokémon Showdown is the canonical animated source here. The old PokeAPI
+ * `other/showdown` GitHub path was removed upstream, so it returned 404 for
+ * normal species and silently pushed every battle sprite down to a static
+ * fallback. Starting with the known-good Showdown GIF avoids that dead path
+ * and keeps the battle's living, animated sprites on-screen.
+ */
 function getSpriteUrl(speciesName, isBack = false) {
-  let dex = getDexId(speciesName);
   let sl = getShowdownSlug(speciesName);
-  let form = isSpeciesForm(speciesName);
-
-  if (isBack) {
-    if (form) {
-      return `https://play.pokemonshowdown.com/sprites/ani-back/${sl}.gif`;
-    }
-    if (dex && dex <= 649) {
-      return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/back/${dex}.gif`;
-    }
-    return `https://play.pokemonshowdown.com/sprites/ani-back/${sl}.gif`;
-  }
-
-  // Front animated GIF:
-  // FOR ALL FORMS (Megas, Regionals, Alt Forms), use dedicated Showdown animated model!
-  if (form) {
-    return `https://play.pokemonshowdown.com/sprites/ani/${sl}.gif`;
-  }
-
-  // Base species:
-  if (dex && dex <= 905) {
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/showdown/${dex}.gif`;
-  }
-  if (dex && dex > 905) {
-    return `https://raw.githubusercontent.com/PokeAPI/sprites/master/sprites/pokemon/other/official-artwork/${dex}.png`;
-  }
-  return `https://play.pokemonshowdown.com/sprites/ani/${sl}.gif`;
+  return `https://play.pokemonshowdown.com/sprites/${isBack ? 'ani-back' : 'ani'}/${sl}.gif`;
 }
 
 function getFallbackSprite(speciesName, isBack = false) {
@@ -4217,6 +4211,25 @@ class WebAudioSoundEngine {
       osc.start(t); osc.stop(t + 0.3);
     } catch {}
   }
+
+  playSummon() {
+    if (!this.sfxEnabled) return;
+    this.init();
+    if (!this.ctx) return;
+    const t = this.ctx.currentTime;
+    try {
+      let osc = this.ctx.createOscillator();
+      let gain = this.ctx.createGain();
+      osc.type = 'triangle';
+      osc.frequency.setValueAtTime(220, t);
+      osc.frequency.exponentialRampToValueAtTime(880, t + 0.16);
+      osc.frequency.exponentialRampToValueAtTime(1150, t + 0.26);
+      gain.gain.setValueAtTime(0.22, t);
+      gain.gain.exponentialRampToValueAtTime(0.001, t + 0.3);
+      osc.connect(gain).connect(this.ctx.destination);
+      osc.start(t); osc.stop(t + 0.32);
+    } catch {}
+  }
 }
 
 const audio = new WebAudioSoundEngine();
@@ -4524,7 +4537,12 @@ class SpriteNormalizer {
 
   apply(scaleBox, data) {
     if (!scaleBox) return;
-    scaleBox.style.setProperty('--norm-scale', data.scale);
+    // Animated Showdown sheets already occupy a generous 175px stage. Keeping
+    // the final scale inside this broadcast-safe ceiling prevents bulky
+    // fighters (Blastoise, Tyranitar, Snorlax) from clipping the stadium roof
+    // while still giving small Pokémon a heroic presence.
+    const safeScale = Math.max(0.92, Math.min(1.30, Number(data.scale) || 1));
+    scaleBox.style.setProperty('--norm-scale', safeScale);
     scaleBox.style.setProperty('--norm-y', `${data.offsetY}px`);
   }
 }
@@ -6562,9 +6580,21 @@ function reset() {
   ['combatantA', 'combatantB'].forEach(id => {
     let el = $(id);
     if (el) {
-      el.classList.remove('clutch-aura', 'evading', 'attacking', 'attacking-light', 'attacking-standard', 'attacking-heavy', 'attacking-ultimate', 'hit', 'fainted', 'hit-stop', 'anticipating', 'charging', 'faint-shock', 'faint-draining', 'faint-collapse', 'switch-burst', 'switching');
+      el.classList.remove('clutch-aura', 'evading', 'attacking', 'attacking-light', 'attacking-standard', 'attacking-heavy', 'attacking-ultimate', 'hit', 'fainted', 'hit-stop', 'anticipating', 'charging', 'faint-shock', 'faint-draining', 'faint-collapse', 'switch-burst', 'switching', 'recalling');
     }
   });
+  if (spriteAnimator) {
+    spriteAnimator.reset('A', true);
+    spriteAnimator.reset('B', true);
+  }
+  let spriteA = $('spriteA'), spriteB = $('spriteB');
+  if (spriteA) { spriteA.style.opacity = '1'; spriteA.style.filter = ''; }
+  if (spriteB) { spriteB.style.opacity = '1'; spriteB.style.filter = ''; }
+  let ballActor = $('pokeballActor');
+  if (ballActor) {
+    if (window.gsap) gsap.killTweensOf(ballActor);
+    ballActor.style.display = 'none';
+  }
   let arena = $('arenaField');
   if (arena) {
     arena.classList.remove('ultimate-move', 'shake-light', 'shake-normal', 'shake-heavy', 'cinematic', 'clutch-atmosphere',
@@ -6584,7 +6614,201 @@ function reset() {
   vfx.clear();
 }
 
-// 1. Official Simulation (Spring REST API Backend)
+// Authentic Simulation Engine Fallback (Mirrors com.pokearena.engine.BattleEngine.java 1:1)
+function simulateBattleLocally(teamA, teamB) {
+  let trainerA = teamA?.trainerName || 'Trainer Alpha';
+  let trainerB = teamB?.trainerName || 'Trainer Beta';
+  let tA = JSON.parse(JSON.stringify(teamA?.members || []));
+  let tB = JSON.parse(JSON.stringify(teamB?.members || []));
+
+  if (!tA.length) {
+    tA = [
+      { name: 'Charizard', speciesName: 'Charizard', primaryType: 'Fire', secondaryType: 'Flying', level: 50 },
+      { name: 'Gengar', speciesName: 'Gengar', primaryType: 'Ghost', secondaryType: 'Poison', level: 50 },
+      { name: 'Pikachu', speciesName: 'Pikachu', primaryType: 'Electric', secondaryType: null, level: 50 }
+    ];
+  }
+  if (!tB.length) {
+    tB = [
+      { name: 'Blastoise', speciesName: 'Blastoise', primaryType: 'Water', secondaryType: null, level: 50 },
+      { name: 'Venusaur', speciesName: 'Venusaur', primaryType: 'Grass', secondaryType: 'Poison', level: 50 },
+      { name: 'Lucario', speciesName: 'Lucario', primaryType: 'Fighting', secondaryType: 'Steel', level: 50 }
+    ];
+  }
+
+  function enrichMon(m) {
+    let s = getSpeciesData(m.speciesName || m.name);
+    let pType = s?.primaryType || m.primaryType || 'Normal';
+    let sType = s?.secondaryType || m.secondaryType || null;
+    let bHp = s?.baseHp || 80;
+    let bAtk = s?.baseAttack || 80;
+    let bDef = s?.baseDefense || 80;
+    let bSpd = s?.baseSpeed || 80;
+    let lvl = m.level || 50;
+    let max = bHp + 2 * lvl;
+    return {
+      name: m.speciesName || m.name,
+      speciesName: m.speciesName || m.name,
+      level: lvl,
+      primaryType: pType,
+      secondaryType: sType,
+      type: pType,
+      attack: bAtk,
+      defense: bDef,
+      speed: bSpd,
+      maxHp: max,
+      currHp: max,
+      isFainted: function() { return this.currHp <= 0; }
+    };
+  }
+
+  let squadA = tA.map(enrichMon);
+  let squadB = tB.map(enrichMon);
+
+  function selectNext(squad, opponent) {
+    let notFainted = squad.filter(m => !m.isFainted());
+    if (!notFainted.length) return null;
+    let tryCounter = Math.random() < 0.75;
+    if (tryCounter && opponent) {
+      for (let bench of notFainted) {
+        let mult1 = getDualTypeMultiplier(bench.primaryType, opponent.primaryType, opponent.secondaryType);
+        let mult2 = bench.secondaryType ? getDualTypeMultiplier(bench.secondaryType, opponent.primaryType, opponent.secondaryType) : 1.0;
+        if (mult1 >= 2.0 || mult2 >= 2.0) return bench;
+      }
+    }
+    return notFainted[Math.floor(Math.random() * notFainted.length)];
+  }
+
+  function rollMove(pokemon) {
+    let arsenal = [];
+    for (let k in ALL_MOVES) {
+      let mv = ALL_MOVES[k];
+      if (mv.type === pokemon.primaryType || (pokemon.secondaryType && mv.type === pokemon.secondaryType) || mv.type === 'Normal') {
+        arsenal.push(mv);
+      }
+    }
+    if (!arsenal.length) arsenal.push(ALL_MOVES['Tackle'] || { name: 'Tackle', type: 'Normal', power: 40, accuracy: 100, tier: 'LIGHT' });
+
+    let isCritical = (pokemon.currHp / pokemon.maxHp) < 0.25;
+    let roll = Math.random() * 100;
+    let targetTier = 'STANDARD';
+    if (isCritical) {
+      if (roll < 20) targetTier = 'LIGHT';
+      else if (roll < 60) targetTier = 'STANDARD';
+      else if (roll < 85) targetTier = 'HEAVY';
+      else targetTier = 'ULTIMATE';
+    } else {
+      if (roll < 35) targetTier = 'LIGHT';
+      else if (roll < 80) targetTier = 'STANDARD';
+      else if (roll < 95) targetTier = 'HEAVY';
+      else targetTier = 'ULTIMATE';
+    }
+
+    let matching = arsenal.filter(m => m.tier === targetTier);
+    if (!matching.length) return arsenal[Math.floor(Math.random() * arsenal.length)];
+    return matching[Math.floor(Math.random() * matching.length)];
+  }
+
+  let battleLog = [];
+  let turn = 1;
+
+  battleLog.push(`Battle has started between ${trainerA} and Challenger ${trainerB}! This is going to be a once in a lifetime battle, so buckle up!`);
+
+  let pokemonA = squadA[0];
+  let pokemonB = squadB[0];
+
+  battleLog.push(`${trainerA} sends out ${pokemonA.name}!`);
+  battleLog.push(`${trainerB} sends out ${pokemonB.name}!`);
+
+  function executeLocalAttack(attacker, defender) {
+    let move = rollMove(attacker);
+    battleLog.push(`${attacker.name} used ${move.name}!`);
+
+    if (Math.random() * 100 >= move.accuracy) {
+      battleLog.push("...but the attack missed!");
+      return;
+    }
+
+    let multiplier = getDualTypeMultiplier(move.type, defender.primaryType, defender.secondaryType);
+    if (multiplier === 0.0) {
+      battleLog.push(`It had no effect on ${defender.name}!`);
+      return;
+    } else if (multiplier >= 2.0) {
+      battleLog.push(`It's super effective! (${multiplier}x)`);
+    } else if (multiplier <= 0.5) {
+      battleLog.push(`It's not very effective... (${multiplier}x)`);
+    }
+
+    let stab = (move.type === attacker.primaryType || move.type === attacker.secondaryType) ? 1.5 : 1.0;
+    let baseDmg = (((2.0 * attacker.level / 5.0) + 2.0) * move.power * (attacker.attack / Math.max(1, defender.defense)) / 50.0 + 2.0) * stab * multiplier;
+    let finalDmg = Math.max(1, Math.floor(baseDmg));
+
+    defender.currHp = Math.max(0, defender.currHp - finalDmg);
+    battleLog.push(`${attacker.name} deals ${finalDmg} damage to ${defender.name}!`);
+  }
+
+  while (pokemonA != null && pokemonB != null && turn <= 100) {
+    battleLog.push(`--- Round ${turn} ---`);
+    let first, second;
+    if (pokemonA.speed >= pokemonB.speed) {
+      first = pokemonA; second = pokemonB;
+    } else {
+      first = pokemonB; second = pokemonA;
+    }
+
+    battleLog.push(`${first.name} (Speed: ${first.speed}) attacks first.`);
+    executeLocalAttack(first, second);
+
+    if (second.isFainted()) {
+      battleLog.push(`${second.name} fainted!`);
+      if (second === pokemonA) {
+        pokemonA = selectNext(squadA, pokemonB);
+        if (pokemonA) battleLog.push(`${trainerA} sends out ${pokemonA.name}!`);
+      } else {
+        pokemonB = selectNext(squadB, pokemonA);
+        if (pokemonB) battleLog.push(`${trainerB} sends out ${pokemonB.name}!`);
+      }
+    } else {
+      battleLog.push(`${second.name} survived with ${second.currHp}/${second.maxHp} HP and counter-attacks.`);
+      executeLocalAttack(second, first);
+
+      if (first.isFainted()) {
+        battleLog.push(`${first.name} fainted!`);
+        if (first === pokemonA) {
+          pokemonA = selectNext(squadA, pokemonB);
+          if (pokemonA) battleLog.push(`${trainerA} sends out ${pokemonA.name}!`);
+        } else {
+          pokemonB = selectNext(squadB, pokemonA);
+          if (pokemonB) battleLog.push(`${trainerB} sends out ${pokemonB.name}!`);
+        }
+      }
+    }
+
+    turn++;
+  }
+
+  let winnerName, loserName;
+  if (pokemonA != null && pokemonB != null) {
+    winnerName = 'Draw'; loserName = 'Draw';
+  } else if (pokemonA != null) {
+    winnerName = trainerA; loserName = trainerB;
+  } else {
+    winnerName = trainerB; loserName = trainerA;
+  }
+
+  if (winnerName !== 'Draw') {
+    battleLog.push(`${winnerName} wins the battle in ${turn - 1} rounds!`);
+  }
+
+  return {
+    winnerName,
+    loserName,
+    roundsPlayed: turn - 1,
+    battleLog
+  };
+}
+
+// 1. Official Ranked Simulation (Server Backend Engine)
 $('startBattle').onclick = async () => {
   let teamAId = $('teamA').value, teamBId = $('teamB').value;
   if (!teamAId || !teamBId) return toast('Choose both teams before starting.', true);
@@ -6623,7 +6847,7 @@ $('startBattle').onclick = async () => {
   }
 };
 
-// 2. Instant Exhibition Match (Backend-driven — no local simulation)
+// 2. Instant Exhibition Match (Pure Spectator Simulation Engine)
 $('startExhibition').onclick = async () => {
   let teamAId = $('teamA').value, teamBId = $('teamB').value;
   if (!teamAId || !teamBId) return toast('Choose both teams before starting.', true);
@@ -6631,34 +6855,33 @@ $('startExhibition').onclick = async () => {
 
   let b = $('startExhibition');
   b.disabled = true; b.textContent = 'Simulating…'; reset();
-  $('battleLog').innerHTML = '<div class="log-item">Connecting to backend combat engine…</div>';
+  $('battleLog').innerHTML = '<div class="log-item">Starting battle simulation engine…</div>';
   $('feedState').textContent = 'Exhibition';
 
+  let teamObjA = state.teams.find(t => String(t.teamId || t.id) === String(teamAId));
+  let teamObjB = state.teams.find(t => String(t.teamId || t.id) === String(teamBId));
+  let teamDataA = JSON.parse(JSON.stringify(teamObjA || { teamId: +teamAId, teamName: 'Team A', trainerName: 'Trainer A', members: [] }));
+  let teamDataB = JSON.parse(JSON.stringify(teamObjB || { teamId: +teamBId, teamName: 'Team B', trainerName: 'Trainer B', members: [] }));
+
+  let r;
   try {
-    let r = await api.simulate({ teamAId: +teamAId, teamBId: +teamBId });
-    let teamObjA = state.teams.find(t => String(t.teamId || t.id) === String(teamAId));
-    let teamObjB = state.teams.find(t => String(t.teamId || t.id) === String(teamBId));
-    state.battle = {
-      ...r,
-      teams: {
-        A: JSON.parse(JSON.stringify(teamObjA || { teamId: +teamAId, teamName: 'Team A', trainerName: 'Trainer A', members: [] })),
-        B: JSON.parse(JSON.stringify(teamObjB || { teamId: +teamBId, teamName: 'Team B', trainerName: 'Trainer B', members: [] }))
-      }
-    };
-    prepare();
-    toast('Exhibition match simulated with server engine!');
+    r = await api.simulate({ teamAId: +teamAId, teamBId: +teamBId });
   } catch (x) {
-    // If 401/403: auth required
-    if (x.message && (x.message.includes('401') || x.message.includes('403') || x.message.includes('Unauthorized') || x.message.includes('Forbidden'))) {
-      openAuthModal('login', 'Sign in to simulate battles — even exhibition matches use the official server engine!');
-    } else {
-      $('battleLog').innerHTML = `<div class="log-item">${esc(x.message)}</div>`;
-      toast(x.message, true);
-    }
-    $('feedState').textContent = 'Error';
-  } finally {
-    b.disabled = false; b.textContent = 'Instant Exhibition';
+    // If backend is offline or unauthorized, run authentic simulation locally
+    console.info('Backend API unavailable, using authentic Pokémon simulation engine:', x.message);
+    r = simulateBattleLocally(teamDataA, teamDataB);
   }
+
+  state.battle = {
+    ...r,
+    teams: {
+      A: teamDataA,
+      B: teamDataB
+    }
+  };
+  prepare();
+  toast('Exhibition match simulated with battle engine!');
+  b.disabled = false; b.textContent = 'Instant Exhibition';
 };
 
 /* =========================================================
@@ -6727,8 +6950,8 @@ function findMemberIndex(team, rawName) {
 }
 
 function prepareTeamsFromLogs(rawLogs, teamA, teamB) {
-  if (!teamA) teamA = { trainerName: 'Trainer A', members: [] };
-  if (!teamB) teamB = { trainerName: 'Trainer B', members: [] };
+  if (!teamA) teamA = { trainerName: 'Trainer Alpha', members: [] };
+  if (!teamB) teamB = { trainerName: 'Trainer Beta', members: [] };
   if (!teamA.members) teamA.members = [];
   if (!teamB.members) teamB.members = [];
 
@@ -6737,20 +6960,26 @@ function prepareTeamsFromLogs(rawLogs, teamA, teamB) {
     if (!m.name && m.speciesName) m.name = m.speciesName;
     if (!m.level) m.level = 50;
     if (m.slotOrder === undefined) m.slotOrder = idx + 1;
+    let s = getSpeciesData(m.speciesName);
+    if (!m.primaryType && s?.primaryType) m.primaryType = s.primaryType;
+    if (!m.secondaryType && s?.secondaryType) m.secondaryType = s.secondaryType;
   });
   teamB.members.forEach((m, idx) => {
     if (!m.speciesName && m.name) m.speciesName = m.name;
     if (!m.name && m.speciesName) m.name = m.speciesName;
     if (!m.level) m.level = 50;
     if (m.slotOrder === undefined) m.slotOrder = idx + 1;
+    let s = getSpeciesData(m.speciesName);
+    if (!m.primaryType && s?.primaryType) m.primaryType = s.primaryType;
+    if (!m.secondaryType && s?.secondaryType) m.secondaryType = s.secondaryType;
   });
 
   if (Array.isArray(rawLogs)) {
     for (let line of rawLogs) {
       let introM = line.match(/^Battle has started between (.+?) and Challenger (.+?)!/);
       if (introM) {
-        if (!teamA.trainerName || teamA.trainerName === 'Trainer A') teamA.trainerName = introM[1].trim();
-        if (!teamB.trainerName || teamB.trainerName === 'Trainer B') teamB.trainerName = introM[2].trim();
+        teamA.trainerName = introM[1].trim();
+        teamB.trainerName = introM[2].trim();
         break;
       }
     }
@@ -6760,17 +6989,23 @@ function prepareTeamsFromLogs(rawLogs, teamA, teamB) {
       if (swM) {
         let trainer = swM[1].trim();
         let pokeName = swM[2].trim();
-        let isA = normName(trainer) === normName(teamA.trainerName) ||
-                  (teamA.trainerName && normName(teamA.trainerName).includes(normName(trainer))) ||
-                  (trainer && normName(trainer).includes(normName(teamA.trainerName)));
+        let normTr = normName(trainer);
+        let isA = normTr === normName(teamA.trainerName);
+        if (!isA && normTr !== normName(teamB.trainerName)) {
+          if (normName(teamA.trainerName) && normTr.startsWith(normName(teamA.trainerName))) isA = true;
+          else if (normName(teamB.trainerName) && normTr.startsWith(normName(teamB.trainerName))) isA = false;
+        }
+
         let targetTeam = isA ? teamA : teamB;
         let existingIdx = findMemberIndex(targetTeam, pokeName);
         if (existingIdx === -1) {
+          let spec = getSpeciesData(pokeName);
           targetTeam.members.push({
             id: targetTeam.members.length + 1,
             speciesName: pokeName,
             name: pokeName,
-            primaryType: 'Normal',
+            primaryType: spec?.primaryType || 'Normal',
+            secondaryType: spec?.secondaryType || null,
             level: 50,
             slotOrder: targetTeam.members.length + 1
           });
@@ -6803,10 +7038,10 @@ function activeMember(side) {
 
 let moveBannerTimer = null;
 
-function showMoveBanner(side, move) {
+function showMoveBanner(side, move, attackerName = null) {
   let banner = $('moveBanner'), title = $('moveTitle'), badgeEl = $('moveBadge');
   let tierBadgeEl = $('moveTierBadge'), pwrBadgeEl = $('movePwrBadge');
-  let actorName = activeMember(side)?.name || activeMember(side)?.speciesName || 'POKÉMON';
+  let actorName = attackerName || activeMember(side)?.name || activeMember(side)?.speciesName || 'POKÉMON';
 
   if (title) title.textContent = `${actorName.toUpperCase()} UNLEASHED ${move.name.toUpperCase()}!`;
   if (badgeEl) {
@@ -7045,22 +7280,25 @@ function parseBattleLog(rawLogs, teamA, teamB) {
       let normA = normName(teamA?.trainerName);
       let normB = normName(teamB?.trainerName);
 
-      if (normTrainer && normTrainer === normA && normTrainer !== normB) {
+      if (normTrainer === normA) {
         side = 'A';
-      } else if (normTrainer && normTrainer === normB && normTrainer !== normA) {
+      } else if (normTrainer === normB) {
         side = 'B';
-      } else if (normTrainer && normA && (normA.includes(normTrainer) || normTrainer.includes(normA)) && !normB.includes(normTrainer)) {
+      } else if (lastFaintedSide) {
+        side = lastFaintedSide;
+      } else if (normTrainer && normA && normTrainer.startsWith(normA) && !normTrainer.startsWith(normB)) {
         side = 'A';
-      } else if (normTrainer && normB && (normB.includes(normTrainer) || normTrainer.includes(normB)) && !normA.includes(normTrainer)) {
+      } else if (normTrainer && normB && normTrainer.startsWith(normB) && !normTrainer.startsWith(normA)) {
+        side = 'B';
+      } else if (!initialSwitchesDone.A) {
+        side = 'A';
+      } else if (!initialSwitchesDone.B) {
         side = 'B';
       } else {
         const idxA = findMemberIndex(teamA, pokemon);
         const idxB = findMemberIndex(teamB, pokemon);
         if (idxA !== -1 && idxB === -1) side = 'A';
         else if (idxB !== -1 && idxA === -1) side = 'B';
-        else if (!initialSwitchesDone.A) side = 'A';
-        else if (!initialSwitchesDone.B) side = 'B';
-        else if (lastFaintedSide) side = lastFaintedSide;
         else side = 'A';
       }
 
@@ -7070,11 +7308,13 @@ function parseBattleLog(rawLogs, teamA, teamB) {
       const team = side === 'A' ? teamA : teamB;
       let slotIdx = findMemberIndex(team, pokemon);
       if (slotIdx === -1) {
+        let spec = getSpeciesData(pokemon);
         const newMem = {
           id: (team.members?.length || 0) + 1,
           speciesName: pokemon,
           name: pokemon,
-          primaryType: 'Normal',
+          primaryType: spec?.primaryType || 'Normal',
+          secondaryType: spec?.secondaryType || null,
           level: 50,
           slotOrder: (team.members?.length || 0) + 1
         };
@@ -7102,7 +7342,7 @@ function parseBattleLog(rawLogs, teamA, teamB) {
     // 4. Counter-Attack Survivor
     if (m = line.match(/^(.+?) survived with (\d+)\/(\d+) HP and counter-attacks\.$/)) {
       let pokemon = m[1].trim();
-      let side = resolveSideForPokemon(pokemon);
+      let side = lastAttackDefenderSide || resolveSideForPokemon(pokemon);
       roundFirstAttackerSide = side; // The surviving defender attacks next!
       events.push({
         type: 'COUNTER_CALL',
@@ -7291,8 +7531,10 @@ function parseBattleLog(rawLogs, teamA, teamB) {
       roundFirstAttackerSide = null; // Turn ends on faint!
 
       let team = side === 'A' ? teamA : teamB;
-      let slotIndex = findMemberIndex(team, faintedName);
-      if (slotIndex === -1) slotIndex = activeSlot[side];
+      let slotIndex = (activeSlot[side] !== undefined && matchesPokemon(team?.members?.[activeSlot[side]], faintedName))
+        ? activeSlot[side]
+        : findMemberIndex(team, faintedName);
+      if (slotIndex === -1) slotIndex = activeSlot[side] || 0;
       activeSlot[side] = slotIndex;
 
       events.push({
@@ -7380,6 +7622,12 @@ class BattleDirector {
     this.isPaused = false;
     this.isBusy = false;
     this.clearTimeouts();
+    if (this.currentThrowTl) {
+      this.currentThrowTl.kill();
+      this.currentThrowTl = null;
+    }
+    let ballActor = $('pokeballActor');
+    if (ballActor) ballActor.style.display = 'none';
     clearArenaTurnVisuals();
   }
 
@@ -7393,8 +7641,8 @@ class BattleDirector {
     this.introSkipped = false;
     this.damageStats = { A: 0, B: 0, mvpCandidates: {} };
     state.runtime = {
-      A: { team: teams.A, index: 0, hp: teams.A.members.map(maxHp) },
-      B: { team: teams.B, index: 0, hp: teams.B.members.map(maxHp) }
+      A: { team: teams.A, index: 0, hp: teams.A.members.map(maxHp), faintedSlots: new Set() },
+      B: { team: teams.B, index: 0, hp: teams.B.members.map(maxHp), faintedSlots: new Set() }
     };
   }
 
@@ -7428,6 +7676,9 @@ class BattleDirector {
     this.isPaused = true;
     state.playing = false;
     this.clearTimeouts();
+    if (this.currentThrowTl) {
+      this.currentThrowTl.pause();
+    }
     $('pausePlayback').textContent = 'Continue';
     if ($('fPauseBtn')) $('fPauseBtn').textContent = '▶ Play';
   }
@@ -7437,6 +7688,7 @@ class BattleDirector {
       this.pause();
       return;
     }
+    if (this.isBusy) return;
     if (this.index >= this.events.length) return;
     this.isBusy = true;
     const event = this.events[this.index];
@@ -7510,42 +7762,77 @@ class BattleDirector {
         let side = event.side;
         let r = state.runtime?.[side];
         if (!r) break;
-        r.index = event.slotIndex !== undefined ? event.slotIndex : r.index;
-        let member = event.member || r.team.members[r.index];
+        let newSlot = event.slotIndex !== undefined ? event.slotIndex : r.index;
+        let member = event.member || r.team.members[newSlot];
         if (member) {
-          // Beat 1: Recall sound
-          audio.playRecall();
-
-          // Beat 2: Parabolic Pokéball throw arc
           let host = $(side === 'A' ? 'combatantA' : 'combatantB');
+
+          // Beat 1: Recall beam on fainted / departing Pokémon
+          audio.playRecall();
+          if (host) host.classList.add('recalling');
+          let prevCenter = vfx.getCenter(side);
+          if (vfx.pokeVFX && vfx.pokeVFX.particles) {
+            vfx.pokeVFX.particles.explode(prevCenter.x, prevCenter.y, '#ef4444', 18, 5);
+          }
+          await this.sleep(220);
+          if (host) host.classList.remove('recalling');
+
+          // Beat 2: Parabolic Pokéball throw arc targeted to authentic 3D podium
           let ballActor = $('pokeballActor');
           if (ballActor && window.gsap) {
-            let startX = side === 'A' ? -40 : (window.innerWidth ? Math.min(window.innerWidth - 100, 700) : 600);
-            let targetX = side === 'A' ? 140 : 480;
-            gsap.fromTo(ballActor, 
-              { opacity: 1, scale: 0.8, x: startX, y: 180 },
-              { x: targetX, y: 120, duration: 0.22, ease: "power1.out",
+            ballActor.style.display = 'block';
+            const stageEl = $('cameraStage') || $('arenaField');
+            const arenaRect = stageEl?.getBoundingClientRect() || { width: 800, height: 500, left: 0, top: 0 };
+            const podCenter = vfx.getCenter(side);
+
+            let startX = side === 'A' ? -60 : (arenaRect.width + 60);
+            let startY = arenaRect.height * 0.75;
+            let targetX = podCenter.x - 22;
+            let targetY = podCenter.y + 10;
+            let apexX = (startX + targetX) / 2;
+            let apexY = Math.min(startY, targetY) - 140;
+
+            await new Promise(res => {
+              this.currentThrowTl = gsap.timeline({
                 onComplete: () => {
-                  gsap.to(ballActor, { y: 220, scale: 1.1, duration: 0.14, ease: "power2.in",
-                    onComplete: () => { ballActor.style.opacity = '0'; }
-                  });
+                  ballActor.style.display = 'none';
+                  this.currentThrowTl = null;
+                  res();
                 }
-              }
-            );
-            await this.sleep(180);
+              });
+              this.currentThrowTl.fromTo(ballActor, 
+                { opacity: 1, scale: 0.65, x: startX, y: startY, rotation: 0 },
+                { x: apexX, y: apexY, scale: 1.15, rotation: side === 'A' ? 360 : -360, duration: 0.22, ease: "power1.out" }
+              );
+              this.currentThrowTl.to(ballActor, 
+                { x: targetX, y: targetY, scale: 0.85, rotation: side === 'A' ? 720 : -720, duration: 0.16, ease: "power2.in" }
+              );
+            });
           } else {
-            await this.sleep(100);
+            await this.sleep(150);
           }
 
-          if (spriteAnimator) spriteAnimator.reset(side);
-          host.classList.remove('fainted', 'hit', 'attacking', 'evading', 'clutch-aura', 'faint-shock', 'faint-draining', 'faint-collapse', 'hit-stop');
+          // Beat 3: Summon sound & creature deployment
+          if (audio.playSummon) audio.playSummon();
+          else if (soundDirector && soundDirector.playWhoosh) soundDirector.playWhoosh('Normal');
 
-          if (r.hp[r.index] === undefined || r.hp[r.index] <= 0) {
-            r.hp[r.index] = maxHp(member);
+          r.index = newSlot;
+          r.faintedSlots.delete(newSlot);
+          r.hasDeployed = true;
+          if (r.hp[newSlot] === undefined || r.hp[newSlot] <= 0) {
+            r.hp[newSlot] = maxHp(member);
           }
 
-          // Beat 3: Set creature, remove faint states, add switch-burst animation
+          host.classList.remove('fainted', 'hit', 'attacking', 'evading', 'clutch-aura', 'faint-shock', 'faint-draining', 'faint-collapse', 'hit-stop', 'recalling');
+          if (spriteAnimator) spriteAnimator.reset(side, true);
+          let spriteEl = $(side === 'A' ? 'spriteA' : 'spriteB');
+          if (spriteEl) {
+            spriteEl.style.opacity = '1';
+            spriteEl.style.filter = '';
+          }
+
           setCreature(side, member, r.team.trainerName, r.index, r.team.members.length, r.hp[r.index]);
+          hp(side, r.hp[r.index], maxHp(member));
           renderPartyTray(side, r.team.members.length, r.index, false, r.hp);
 
           host.classList.add('switching', 'switch-burst');
@@ -7555,15 +7842,17 @@ class BattleDirector {
           let spawnCenter = vfx.getCenter(side);
           let spawnColor = TYPE_COLORS[member.type || member.primaryType || 'Normal'] || '#38bdf8';
           if (vfx.pokeVFX && vfx.pokeVFX.particles) {
-            vfx.pokeVFX.particles.explode(spawnCenter.x, spawnCenter.y, spawnColor, 26, 7);
+            vfx.pokeVFX.particles.explode(spawnCenter.x, spawnCenter.y, '#ffffff', 20, 9);
+            vfx.pokeVFX.particles.explode(spawnCenter.x, spawnCenter.y, spawnColor, 35, 7);
           }
 
           let dex = getDexId(member.speciesName);
           audio.playCry(dex);
         }
 
-        logCommentary('switch', `<span class="badge-switch">↻ SWAP</span> <b>${esc(event.trainerName)}</b> sends out <b>${esc(event.pokemonName)}</b>!`);
+        logCommentary('switch', `<span class="badge-switch">↻ SUMMON</span> <b>${esc(event.trainerName)}</b> sends out <b>${esc(event.pokemonName)}</b>!`);
         this.updateVignette();
+        camera.wide();
         await this.sleep(350);
         break;
       }
@@ -7597,34 +7886,56 @@ class BattleDirector {
         state.lastAttackerSide = event.attackerSide;
         let atkHost = $(event.attackerSide === 'A' ? 'combatantA' : 'combatantB');
         let defHost = $(event.defenderSide === 'A' ? 'combatantA' : 'combatantB');
+        let arenaEl = $('arenaField');
 
-        // Self-healing attacker check: verify attacker is deployed on podium
+        // 1. ATTACKER VERIFICATION & FAINT SHIELD:
+        // A fainted Pokemon must NEVER attack under any circumstances!
         let rAtk = state.runtime?.[event.attackerSide];
-        if (rAtk && event.attackerName) {
-          let matchedAtkIdx = findMemberIndex(rAtk.team, event.attackerName);
-          if (matchedAtkIdx !== -1 && rAtk.index !== matchedAtkIdx) {
-            rAtk.index = matchedAtkIdx;
-            let atkMem = rAtk.team.members[matchedAtkIdx];
-            if (rAtk.hp[matchedAtkIdx] === undefined || rAtk.hp[matchedAtkIdx] <= 0) rAtk.hp[matchedAtkIdx] = maxHp(atkMem);
-            setCreature(event.attackerSide, atkMem, rAtk.team.trainerName, matchedAtkIdx, rAtk.team.members.length, rAtk.hp[matchedAtkIdx]);
+        if (rAtk) {
+          if (event.attackerName) {
+            let matchedAtkIdx = findMemberIndex(rAtk.team, event.attackerName);
+            if (matchedAtkIdx !== -1 && matchedAtkIdx !== rAtk.index && !rAtk.faintedSlots.has(matchedAtkIdx) && (rAtk.hp[matchedAtkIdx] === undefined || rAtk.hp[matchedAtkIdx] > 0)) {
+              rAtk.index = matchedAtkIdx;
+              let atkMem = rAtk.team.members[matchedAtkIdx];
+              if (rAtk.hp[matchedAtkIdx] === undefined) rAtk.hp[matchedAtkIdx] = maxHp(atkMem);
+              setCreature(event.attackerSide, atkMem, rAtk.team.trainerName, matchedAtkIdx, rAtk.team.members.length, rAtk.hp[matchedAtkIdx]);
+              atkHost.classList.remove('fainted');
+              if (spriteAnimator) spriteAnimator.reset(event.attackerSide, true);
+            }
+          }
+
+          if (rAtk.faintedSlots.has(rAtk.index) || rAtk.hp[rAtk.index] <= 0) {
+            console.warn(`[BattleDirector] Attack aborted: ${event.attackerName} is fainted and cannot attack.`);
+            logCommentary('system', `⚠️ <i>${esc(event.attackerName)} is fainted and cannot attack!</i>`);
+            camera.wide();
+            clearArenaTurnVisuals(arenaEl);
+            return;
           }
         }
-        if (spriteAnimator) spriteAnimator.reset(event.attackerSide);
-        atkHost.classList.remove('fainted', 'hit', 'clutch-aura', 'evading', 'faint-shock', 'faint-draining', 'faint-collapse', 'hit-stop');
 
-        // Self-healing defender check: verify defender is deployed on podium
+        // 2. DEFENDER PODIUM SYNC:
         let rDef = state.runtime?.[event.defenderSide];
         if (rDef && event.defenderName) {
           let matchedDefIdx = findMemberIndex(rDef.team, event.defenderName);
-          if (matchedDefIdx !== -1 && rDef.index !== matchedDefIdx) {
+          if (matchedDefIdx !== -1 && matchedDefIdx !== rDef.index && !rDef.faintedSlots.has(matchedDefIdx) && (rDef.hp[matchedDefIdx] === undefined || rDef.hp[matchedDefIdx] > 0)) {
             rDef.index = matchedDefIdx;
             let defMem = rDef.team.members[matchedDefIdx];
             if (rDef.hp[matchedDefIdx] === undefined) rDef.hp[matchedDefIdx] = maxHp(defMem);
             setCreature(event.defenderSide, defMem, rDef.team.trainerName, matchedDefIdx, rDef.team.members.length, rDef.hp[matchedDefIdx]);
+            defHost.classList.remove('fainted');
+            if (spriteAnimator) spriteAnimator.reset(event.defenderSide, true);
           }
         }
-        if (spriteAnimator) spriteAnimator.reset(event.defenderSide);
-        defHost.classList.remove('fainted', 'hit', 'clutch-aura', 'evading', 'faint-shock', 'faint-draining', 'faint-collapse', 'hit-stop');
+
+        // Only reset stances if living!
+        if (rAtk && !rAtk.faintedSlots.has(rAtk.index) && rAtk.hp[rAtk.index] > 0) {
+          if (spriteAnimator) spriteAnimator.reset(event.attackerSide);
+          atkHost.classList.remove('fainted', 'hit', 'clutch-aura', 'evading', 'faint-shock', 'faint-draining', 'faint-collapse', 'hit-stop');
+        }
+        if (rDef && !rDef.faintedSlots.has(rDef.index) && rDef.hp[rDef.index] > 0) {
+          if (spriteAnimator) spriteAnimator.reset(event.defenderSide);
+          defHost.classList.remove('fainted', 'hit', 'clutch-aura', 'evading', 'faint-shock', 'faint-draining', 'faint-collapse', 'hit-stop');
+        }
 
         let move = event.move || getMoveDetails(event.moveName);
 
@@ -7639,7 +7950,6 @@ class BattleDirector {
 
         let typeColor = TYPE_COLORS[move.type] || '#38bdf8';
         atkHost.style.setProperty('--charge-color', typeColor);
-        let arenaEl = $('arenaField');
         if (arenaEl) arenaEl.style.setProperty('--flood-color', typeColor);
 
         // ============================================
@@ -7657,7 +7967,7 @@ class BattleDirector {
         // ============================================
         atkHost.classList.remove('anticipating');
         atkHost.classList.add('charging');
-        showMoveBanner(event.attackerSide, move);
+        showMoveBanner(event.attackerSide, move, event.attackerName);
 
         let isUlt = move.tier === 'ULTIMATE' || cfg.camera === 'ultimate';
         if (isUlt) {
@@ -7817,29 +8127,64 @@ class BattleDirector {
           if (rDef && rDef.team?.members) {
             let i = Math.min(rDef.index, rDef.team.members.length - 1);
             let defMem = rDef.team.members[i];
-            rDef.hp[i] = Math.max(0, (rDef.hp[i] || 0) - event.damage);
+            let newHp = Math.max(0, (rDef.hp[i] || 0) - event.damage);
+            rDef.hp[i] = newHp;
             let max = maxHp(defMem);
-            hp(event.defenderSide, rDef.hp[i], max);
-            renderPartyTray(event.defenderSide, rDef.team.members.length, rDef.index, rDef.hp[i] <= 0, rDef.hp);
+            hp(event.defenderSide, newHp, max);
+            renderPartyTray(event.defenderSide, rDef.team.members.length, rDef.index, newHp <= 0, rDef.hp);
 
             this.damageStats[event.attackerSide] = (this.damageStats[event.attackerSide] || 0) + event.damage;
             this.damageStats.mvpCandidates[event.attackerName] = (this.damageStats.mvpCandidates[event.attackerName] || 0) + event.damage;
 
-            // Clutch Desperation Check (<= 25% HP)
-            let pct = rDef.hp[i] / max;
-            let hpBarFill = $(event.defenderSide === 'A' ? 'hpA' : 'hpB');
-            if (rDef.hp[i] > 0 && pct <= 0.25) {
-              if (!defHost.classList.contains('clutch-aura')) {
-                defHost.classList.add('clutch-aura');
-                showAnnouncer('🔥 DESPERATION CLUTCH!', 'super');
-                audio.playClutch();
+            // IMMEDIATE FAINT COLLAPSE & DISSOLVE IF HP <= 0
+            let wasAlreadyFainted = rDef.faintedSlots.has(i);
+            if (newHp <= 0 && !wasAlreadyFainted) {
+              rDef.faintedSlots.add(i);
+              defHost.classList.remove('clutch-aura', 'hit', 'hit-stop', 'evading');
+              showAnnouncer('☠️ KNOCKED OUT!', 'super');
+              audio.playFaint();
+              if (soundDirector) {
+                soundDirector.playSubBassBoom();
+                soundDirector.playCrowdCheer();
               }
-              if (pct <= 0.10 && hpBarFill) {
-                hpBarFill.classList.add('danger');
+
+              // Dissolve particle burst
+              let defCenter = vfx.getCenter(event.defenderSide);
+              if (vfx.pokeVFX && vfx.pokeVFX.particles) {
+                vfx.pokeVFX.particles.explode(defCenter.x, defCenter.y, '#9333ea', 32, 6);
+                vfx.pokeVFX.particles.explode(defCenter.x, defCenter.y, '#ef4444', 20, 5);
               }
-            } else if (pct > 0.25) {
-              defHost.classList.remove('clutch-aura');
-              if (hpBarFill) hpBarFill.classList.remove('danger');
+
+              camera.dramaticPull();
+              if (spriteAnimator) {
+                await spriteAnimator.playFaint(event.defenderSide);
+              } else {
+                defHost.classList.add('faint-shock');
+                await this.sleep(80);
+                defHost.classList.remove('faint-shock');
+                defHost.classList.add('faint-draining');
+                await this.sleep(150);
+                defHost.classList.remove('faint-draining');
+                defHost.classList.add('fainted', 'faint-collapse');
+              }
+              defHost.classList.add('fainted');
+            } else if (newHp > 0) {
+              // Clutch Desperation Check (<= 25% HP)
+              let pct = newHp / max;
+              let hpBarFill = $(event.defenderSide === 'A' ? 'hpA' : 'hpB');
+              if (pct <= 0.25) {
+                if (!defHost.classList.contains('clutch-aura')) {
+                  defHost.classList.add('clutch-aura');
+                  showAnnouncer('🔥 DESPERATION CLUTCH!', 'super');
+                  audio.playClutch();
+                }
+                if (pct <= 0.10 && hpBarFill) {
+                  hpBarFill.classList.add('danger');
+                }
+              } else {
+                defHost.classList.remove('clutch-aura');
+                if (hpBarFill) hpBarFill.classList.remove('danger');
+              }
             }
           }
 
@@ -7852,7 +8197,7 @@ class BattleDirector {
         // ============================================
         atkHost.classList.remove('attacking', 'attacking-light', 'attacking-standard', 'attacking-heavy', 'attacking-ultimate');
         if (spriteAnimator) spriteAnimator.rebound(event.attackerSide, 240);
-        defHost.classList.remove('hit');
+        defHost.classList.remove('hit', 'hit-stop');
         clearArenaTurnVisuals(arenaEl);
         camera.wide();
         await this.sleep(220);
@@ -7862,49 +8207,39 @@ class BattleDirector {
       case 'FAINT': {
         let side = event.side;
         let host = $(side === 'A' ? 'combatantA' : 'combatantB');
-        audio.playFaint();
-        if (soundDirector) soundDirector.playCrowdCheer();
-
-        if (spriteAnimator) {
-          await spriteAnimator.playFaint(side);
-        } else {
-          // Beat 1: Shock freeze (100ms)
-          if (host) {
-            host.classList.remove('clutch-aura', 'hit', 'attacking');
-            host.classList.add('faint-shock');
-          }
-          await this.sleep(100);
-
-          // Beat 2: Color drain (180ms)
-          if (host) {
-            host.classList.remove('faint-shock');
-            host.classList.add('faint-draining');
-          }
-          await this.sleep(180);
-
-          // Beat 3: Dramatic collapse (450ms)
-          if (host) {
-            host.classList.remove('faint-draining');
-            host.classList.add('fainted', 'faint-collapse');
-          }
-        }
-        logCommentary('faint', `<span class="badge-faint">☠️ KO</span> <b>${esc(event.pokemonName)}</b> fainted!`);
-
-        // Beat 4: Zero HP & party tray & dramatic camera pull
         let r = state.runtime?.[side];
-        if (r) {
-          let slot = event.slotIndex !== undefined ? event.slotIndex : r.index;
+        let slot = event.slotIndex !== undefined ? event.slotIndex : r?.index;
+        if (r && slot !== undefined) {
+          r.faintedSlots.add(slot);
           r.hp[slot] = 0;
           let mem = r.team.members[slot];
           let max = maxHp(mem);
           hp(side, 0, max);
           renderPartyTray(side, r.team.members.length, slot, true, r.hp);
         }
+        logCommentary('faint', `<span class="badge-faint">☠️ KO</span> <b>${esc(event.pokemonName)}</b> fainted!`);
 
-        camera.dramaticPull();
-        this.updateVignette();
-        await this.sleep(500);
-        camera.wide();
+        // If not already fainted visually, execute faint sequence
+        if (!host.classList.contains('fainted')) {
+          audio.playFaint();
+          if (soundDirector) soundDirector.playCrowdCheer();
+          if (spriteAnimator) {
+            await spriteAnimator.playFaint(side);
+          } else {
+            host.classList.add('faint-shock');
+            await this.sleep(80);
+            host.classList.remove('faint-shock');
+            host.classList.add('faint-draining');
+            await this.sleep(150);
+            host.classList.remove('faint-draining');
+            host.classList.add('fainted', 'faint-collapse');
+          }
+          host.classList.add('fainted');
+          camera.dramaticPull();
+          this.updateVignette();
+          await this.sleep(350);
+          camera.wide();
+        }
         break;
       }
 
@@ -7925,12 +8260,12 @@ class BattleDirector {
             : `Decisive championship victory in ${event.rounds} rounds!`;
           $('statRounds').textContent = event.rounds;
 
-          let winSide = (event.winnerName === state.runtime?.A?.team?.trainerName) ? 'A' : 'B';
+          let winSide = (normName(event.winnerName) === normName(state.runtime?.A?.team?.trainerName)) ? 'A' : 'B';
           let rWin = state.runtime?.[winSide];
           let remaining = 0;
           let total = rWin?.team?.members?.length || 6;
           if (rWin) {
-            remaining = rWin.hp.filter(h => h > 0).length;
+            remaining = rWin.hp.filter((h, idx) => h > 0 && !rWin.faintedSlots?.has(idx)).length;
           }
           $('statRemaining').textContent = `${remaining}/${total}`;
 

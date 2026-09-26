@@ -5,6 +5,7 @@ import com.pokearena.engine.BattlePokemon;
 import com.pokearena.engine.BattleResult;
 import com.pokearena.entity.BattleHistory;
 import com.pokearena.entity.Team;
+import com.pokearena.exception.ForbiddenAccessException;
 import com.pokearena.exception.InvalidBattleException;
 import com.pokearena.exception.ResourceNotFoundException;
 import com.pokearena.model.dto.BattleResultResponseDto;
@@ -33,10 +34,17 @@ public class BattleService {
     }
 
     @Transactional
-    public BattleResultResponseDto simulateBattle(BattleSimulationRequest request){
+    public BattleResultResponseDto simulateBattle(BattleSimulationRequest request , String currentUser) {
 
         Team teamA = teamRepository.findById(request.teamAId()).orElseThrow(() -> new ResourceNotFoundException("Team A not found"));
         Team teamB = teamRepository.findById(request.teamBId()).orElseThrow(() -> new ResourceNotFoundException("Team B not found"));
+
+        boolean ownsTeamA = teamA.getTrainer().getName().equals(currentUser);
+        boolean ownsTeamB = teamB.getTrainer().getName().equals(currentUser);
+
+        if (!ownsTeamA && !ownsTeamB) {
+            throw new ForbiddenAccessException("You must own at least one of the teams");
+        }
 
         if(teamA.getId().equals(teamB.getId())){
             throw new InvalidBattleException("Cannot battle the same team");
