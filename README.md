@@ -1,10 +1,16 @@
 <div align="center">
 
-<img src="docs/images/readme-banner.png" alt="PokéArena Championship Platform" width="100%" />
+<img src="docs/images/logo.png" alt="PokéArena Mascot Logo" width="140" />
+
+# PokéArena
+
+### Turn-Based Pokémon Combat Simulation Platform & Roster Laboratory
+
+A high-performance, deterministic turn-based combat simulation engine and competitive roster laboratory modeling all 9 generations (1,215 species). Built with an 18×18 compound dual-typing matrix, dynamic elemental move arsenals, speed-priority turn resolution, stat scaling by level, tactical counter-switching heuristics, and round-by-round visual anime replay.
 
 <br/>
 
-[![Java](https://img.shields.io/badge/Java-25-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
+[![Java](https://img.shields.io/badge/Java-17%20%2F%2021%20(LTS)-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)](https://openjdk.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring_Boot-4.0-6DB33F?style=for-the-badge&logo=spring&logoColor=white)](https://spring.io/projects/spring-boot)
 [![PostgreSQL](https://img.shields.io/badge/PostgreSQL-16-316192?style=for-the-badge&logo=postgresql&logoColor=white)](https://www.postgresql.org/)
 [![Spring Security](https://img.shields.io/badge/Security-JWT_Stateless-green?style=for-the-badge&logo=springsecurity&logoColor=white)](https://spring.io/projects/spring-security)
@@ -13,12 +19,6 @@
 [![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
 <br/>
-
-<p align="center">
-  <strong>High-Octane Turn-Based Combat Simulation Engine & Competitive Roster Laboratory</strong>
-  <br/>
-  Featuring an 18×18 compound dual-typing matrix, dynamic elemental move arsenals, speed-priority turn resolution, stat scaling by level, tactical counter-switching heuristics, and round-by-round visual replay.
-</p>
 
 [Explore Features](#-feature-showcase) • [Architecture](#-architecture--data-flow) • [Combat Mechanics](#-combat-engine--simulation-mechanics) • [Domain Model](#-domain-model--schema) • [REST API](#-rest-api-reference) • [Quick Start](#-quick-start--local-development)
 
@@ -356,7 +356,7 @@ erDiagram
 ## 🚀 Quick Start & Local Development
 
 ### Prerequisites
-* **Java 21 or Java 25** (`java -version`)
+* **Java 17 or Java 21 (LTS)** (`java -version`)
 * **PostgreSQL 14+** running on `localhost:5432`
 * Maven wrapper (`./mvnw`) included in repository
 
